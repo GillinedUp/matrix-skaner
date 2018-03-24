@@ -1,4 +1,7 @@
-import ply.lex as lex;
+import ply.lex as lex
+import sys
+
+input = None
 
 keywords = {
     'if': "IF",
@@ -23,9 +26,9 @@ tokens = [
     'MATRIXMINUS',
     'MATRIXDIVIDE',
     'MATRIXTIMES',
+    'ID',
     'NUMBER',
     'FNUMBER'
-    'ID'
 ] + list(keywords.values())
 
 
@@ -44,12 +47,17 @@ literals = [ '+','-','*','/','(',')','=','{','}','[',']',',',';','\'',':' ]
 t_ignore = ' \t'
 t_ignore_comment = r'\#.*'
 
+
 def t_ID(t):
-    r'[a-zA-Z[a-zA-Z0-9]\w*'
+    r'[a-zA-Z][a-zA-Z0-9]*'
     t.type = keywords.get(t.value, 'ID')
     return t
 
+
 def t_FNUMBER(t):
+    r'^ [-+]?[0 - 9]*\.?[0 - 9]+([eE][-+]?[0-9]+)?$'
+    t.value = float(t.value)
+    return t
 
 
 def t_NUMBER(t):
@@ -58,3 +66,19 @@ def t_NUMBER(t):
     return t
 
 
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
+
+
+def find_column(token):
+    line_start = input.rfind('\n', 0, token.lexpos) + 1
+    return (token.lexpos - line_start) + 1
+
+
+def t_error(t):
+    print("Illegal character '%s' at: '%d', '%d'" % (t.value[0], t.lineno,  find_column(t)))
+    t.lexer.skip(1)
+
+
+lexer = lex.lex()
