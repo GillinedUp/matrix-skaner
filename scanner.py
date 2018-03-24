@@ -1,7 +1,7 @@
 import ply.lex as lex
 import sys
 
-input = None
+input = ""
 
 keywords = {
     'if': "IF",
