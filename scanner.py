@@ -25,7 +25,14 @@ tokens = [
              'DOTMUL',
              'ID',
              'INT',
-             'FLOAT'
+             'FLOAT',
+             'STRING',
+             'EQUAL',
+             'NOTEQUAL',
+             'TRANSP',
+             'LESSEQUAL',
+             'GREATEREQUAL',
+
          ] + list(keywords.values())
 
 t_ADDASSIGN = r'\+='
@@ -36,11 +43,23 @@ t_DOTADD = r'.\+'
 t_DOTSUB = r'.-'
 t_DOTDIV = r'./'
 t_DOTMUL = r'.\*'
+t_EQUAL = r'=='
+t_NOTEQUAL = r'!='
+t_TRANSP = r'\''
+t_LESSEQUAL = r'<='
+t_GREATEREQUAL = r'>='
 
-literals = ['+', '-', '*', '/', '(', ')', '=', '{', '}', '[', ']', ',', ';', '\'', ':']
+
+literals = ['+', '-', '*', '/', '(', ')', '=', '{', '}', '[', ']', ',', ';', ':', '<', '>']
 
 t_ignore = ' \t'
 t_ignore_comment = r'\#.*'
+
+
+def t_STRING(t):
+    r'".+"'
+    t.value = str(t.value)
+    return t
 
 
 def t_ID(t):
