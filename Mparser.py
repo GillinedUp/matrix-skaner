@@ -19,8 +19,8 @@ precedence = (
 
 def p_error(p):
     if p:
-        print("Syntax error at line {0}, column {1}: LexToken({2}, '{3}')".format(p.lineno, scanner.find_tok_column(p),
-                                                                                  p.type, p.value))
+        print("Syntax error at line {0}, column {1}: LexToken({2}, '{3}')"
+              .format(p.lineno, scanner.find_column(scanner.lexer.lexdata, p), p.type, p.value))
     else:
         print("Unexpected end of input")
 
@@ -31,7 +31,9 @@ def p_program(p):
 
 
 def p_instructions(p):
-    """instructions : instructions instruction | instruction """
+    """instructions : instructions instruction
+                    | instruction
+    """
     if len(p) == 2:
         p[0] = entities.Instructions(p[1], None)
     else:
@@ -44,7 +46,9 @@ def end_of_the_line_instruction(p):
 
 
 def p_braced_instructions(p):
-    """braced_instructions : '{' instructions '}' | instruction ';'"""
+    """braced_instructions : '{' instructions '}'
+                           | instruction ';'
+    """
     if p[1] == '{':
         p[0] = entities.BracedInstructions(p[2])
     else:
@@ -52,14 +56,14 @@ def p_braced_instructions(p):
 
 
 def p_instruction(p):
-    """instruction: assign |
-                    if_instructions |
-                    for_instruction |
-                    while_instruction |
-                    return_instruction |
-                    break_instruction |
-                    continue_instruction |
-                    print_instruction
+    """instruction : assign
+                   | if_instructions
+                   | for_instruction
+                   | while_instruction
+                   | return_instruction
+                   | break_instruction
+                   | continue_instruction
+                   | print_instruction
     """
     p[0] = p[1]
 
@@ -70,19 +74,19 @@ def p_assign(p):
 
 
 def p_assign_op(p):
-    """assign_op : '=' |
-                    ADDASIGN |
-                    SUBASSIGN |
-                    MULASSIGN |
-                    DIVASSIGN
+    """assign_op : '='
+                 | ADDASIGN
+                 | SUBASSIGN
+                 | MULASSIGN
+                 | DIVASSIGN
     """
     p[0] = p[1]
 
 
 def p_variable(p):
-    """variable : ID |
-                ID '[' array_ref ']'
-                """
+    """variable : ID
+                | ID '[' array_ref ']'
+    """
     if len(p) == 2:
         p[0] = entities.Variable(p[1])
     else:
@@ -90,9 +94,9 @@ def p_variable(p):
 
 
 def p_array_ref(p):
-    """array_ref : ID |
-                   expression |
-                   array_ref ',' array_ref
+    """array_ref : ID
+                 | expression
+                 | array_ref ',' array_ref
     """
     if len(p) > 2:
         p[0] = entities.MatrixIndexes(p[1], p[3])
@@ -101,25 +105,25 @@ def p_array_ref(p):
 
 
 def p_expression(p):
-    """expression:  variable |
-                    constant |
-                    unary_expr |
-                    binary_expr |
-                    matrix_init
+    """expression : variable
+                  | constant
+                  | unary_expr
+                  | binary_expr
+                  | matrix_init
     """
     p[0] = p[1]
 
 
 def p_constant(p):
-    """constant: INT |
-                 FLOAT
+    """constant : INT
+                | FLOAT
     """
     p[0] = p[1]
 
 
 def p_unary_expr(p):
-    """unary_expr : '-' expression |
-                    expression TRANSP
+    """unary_expr : '-' expression
+                  | expression TRANSP
     """
     if p[1] == '-':
         p[0] = entities.UnaryExpr(p[1], p[2])
@@ -128,32 +132,32 @@ def p_unary_expr(p):
 
 
 def p_binary_expr(p):
-    """binary_expr : expression '+' expression |
-                     expression '-' expression |
-                     expression '*' expression |
-                     expression '/' expression |
-                     expression '>' expression |
-                     expression '<' expression |
-                     expression EQUAL expression |
-                     expression NOTEQUAL expression |
-                     expression LESSEQUAL expression |
-                     expression GREATEREQUAL expression |
-                     expression DOTADD expression |
-                     expression DOTSUB expression |
-                     expression DOTMUL expression |
-                     expression DOTDIV expression |
+    """binary_expr : expression '+' expression
+                   | expression '-' expression
+                   | expression '*' expression
+                   | expression '/' expression
+                   | expression '>' expression
+                   | expression '<' expression
+                   | expression EQUAL expression
+                   | expression NOTEQUAL expression
+                   | expression LESSEQUAL expression
+                   | expression GREATEREQUAL expression
+                   | expression DOTADD expression
+                   | expression DOTSUB expression
+                   | expression DOTMUL expression
+                   | expression DOTDIV expression
     """
     p[0] = entities.BinaryExpr(p[1], p[2], p[3])
 
 
 def p_matrix_init(p):
-    """matrix_init: ZEROS '( expression ')' |
-                    ZEROS '(' expression ',' expression ')' |
-                    ONES '(' expression ')' |
-                    ONES '(' expression ',' expression ')' |
-                    EYE '(' expression ')' |
-                    '[' rows ';' row ']' |
-                    '[' row ']'
+    """matrix_init : ZEROS '( expression ')'
+                   | ZEROS '(' expression ',' expression ')'
+                   | ONES '(' expression ')'
+                   | ONES '(' expression ',' expression ')'
+                   | EYE '(' expression ')'
+                   | '[' rows ';' row ']'
+                   | '[' row ']'
     """
     if p[1] == "ZEROS":
         if len(p) < 7:
@@ -175,9 +179,9 @@ def p_matrix_init(p):
 
 
 def p_rows(p):
-    """rows : rows ';' row |
-              row
-     """
+    """rows : rows ';' row
+            | row
+    """
     if len(p) > 2:
         p[0] = entities.MatrixInit(p[1], p[3])
     else:
@@ -185,8 +189,8 @@ def p_rows(p):
 
 
 def p_row(p):
-    """row : row ',' expression |
-            expression
+    """row : row ',' expression
+           | expression
     """
     if len(p) > 2:
         p[0] = entities.MatrixInit(p[1], p[3])  # not sure
