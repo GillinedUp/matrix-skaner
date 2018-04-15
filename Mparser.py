@@ -40,8 +40,8 @@ def p_instructions(p):
         p[0] = entities.Instructions(p[1], p[2])
 
 
-def p_end_of_the_line_instruction(p):
-    """end_of_the_line_instruction : instruction ';'"""
+def p_eol_instruction(p):
+    """eol_instruction : instruction ';'"""
     p[0] = entities.Instructions(None, p[1])
 
 
@@ -57,7 +57,7 @@ def p_braced_instructions(p):
 
 def p_instruction(p):
     """instruction : assign
-                   | if_instructions
+                   | if_instruction
                    | iteration_instruction
                    | return_instruction
                    | break_instruction
@@ -74,7 +74,7 @@ def p_assign(p):
 
 def p_assign_op(p):
     """assign_op : '='
-                 | ADDASIGN
+                 | ADDASSIGN
                  | SUBASSIGN
                  | MULASSIGN
                  | DIVASSIGN
@@ -192,12 +192,48 @@ def p_row(p):
            | expression
     """
     if len(p) > 2:
-        p[0] = entities.MatrixInit(p[1], p[3])  # not sure
+        p[0] = entities.MatrixInit(p[1], p[3])
     else:
         p[0] = entities.MatrixInit(None, p[1])
 
 
-def p_if_instructions(p):
+def p_break_instruction(p):
+    """break_instruction : BREAK ';'"""
+    p[0] = p[1]
+
+
+def p_continue_instruction(p):
+    """continue_instruction : CONTINUE ';'"""
+    p[0] = p[1]
+
+
+def p_return_instruction(p):
+    """return_instruction : RETURN expression ';'"""
+    p[0] = entities.ReturnInstruction(p[2])
+
+
+def p_print_instruction(p):
+    """print_instruction : PRINT string_expressions ';'"""
+    p[0] = entities.PrintInstruction(p[2])
+
+
+def p_string_expressions(p):
+    """string_expressions : string_expressions ',' string_expression
+                          | string_expression"""
+    if len(p) >= 4:
+        p[0] = entities.StringExpressions(p[1], p[3])
+    else:
+        p[0] = entities.StringExpressions(None, p[1])
+
+
+def p_string_expression(p):
+    """string_expression : STRING
+                         | expression"""
+
+    p[0] = entities.StringExpressions(None, p[1])
+
+
+def p_if_instruction(p):
     """if_instruction : IF '(' expression ')' instructions
                       | IF '(' expression ')' instructions ELSE instructions
                       | IF '(' expression ')' instructions else_if_instruction
@@ -233,11 +269,9 @@ def p_iteration_instruction(p):
         p[0] = entities.ForInstruction(p[1], p[2])
 
 
-def range_expression(p):
+def p_range_expression(p):
     """range_expression : ID '=' expression ':' expression"""
     p[0] = entities.RangeExpression(p[1], p[3], p[5])
 
-
-# return, continue, break, print, string, range (?), ID
 
 parser = yacc.yacc()

@@ -70,6 +70,22 @@ class MatrixInit(object):
         self.row = row
 
 
+class ReturnInstruction(object):
+    def __init__(self, expression):
+        self.expression = expression
+
+
+class PrintInstruction(object):
+    def __init__(self, string_expressions):
+        self.string_expressions = string_expressions
+
+
+class StringExpressions(object):
+    def __init__(self, string_expressions, string_expression):
+        self.string_expressions = string_expressions
+        self.string_expression = string_expression
+
+
 class IfInstruction(object):
     def __init__(self, expression, instructions, else_if_instructions, else_instructions):
         self.expression = expression
@@ -91,7 +107,7 @@ class ForInstruction(object):
 
 
 class RangeExpression(object):
-    def __init__(self, id, expression1, expression2):
-        self.id = id
+    def __init__(self, my_id, expression1, expression2):
+        self.my_id = my_id
         self.expression1 = expression1
         self.expression2 = expression2
