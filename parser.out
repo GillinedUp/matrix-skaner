@@ -1,0 +1,152 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    ADDASSIGN
+    BREAK
+    CONTINUE
+    ELSE
+    FOR
+    IF
+    PRINT
+    RETURN
+    STRING
+    WHILE
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> instructions
+Rule 2     instructions -> instructions instruction
+Rule 3     instructions -> instruction
+Rule 4     end_of_the_line_instruction -> instruction ;
+Rule 5     braced_instructions -> { instructions }
+Rule 6     braced_instructions -> instruction ;
+Rule 7     instruction -> assign
+Rule 8     instruction -> if_instructions
+Rule 9     instruction -> for_instruction
+Rule 10    instruction -> while_instruction
+Rule 11    instruction -> return_instruction
+Rule 12    instruction -> break_instruction
+Rule 13    instruction -> continue_instruction
+Rule 14    instruction -> print_instruction
+Rule 15    assign -> variable assign_op expression
+Rule 16    assign_op -> =
+Rule 17    assign_op -> ADDASIGN
+Rule 18    assign_op -> SUBASSIGN
+Rule 19    assign_op -> MULASSIGN
+Rule 20    assign_op -> DIVASSIGN
+Rule 21    variable -> ID
+Rule 22    variable -> ID [ array_ref ]
+Rule 23    array_ref -> ID
+Rule 24    array_ref -> expression
+Rule 25    array_ref -> array_ref , array_ref
+Rule 26    expression -> variable
+Rule 27    expression -> constant
+Rule 28    expression -> unary_expr
+Rule 29    expression -> binary_expr
+Rule 30    expression -> matrix_init
+Rule 31    constant -> INT
+Rule 32    constant -> FLOAT
+Rule 33    unary_expr -> - expression
+Rule 34    unary_expr -> expression TRANSP
+Rule 35    binary_expr -> expression + expression
+Rule 36    binary_expr -> expression - expression
+Rule 37    binary_expr -> expression * expression
+Rule 38    binary_expr -> expression / expression
+Rule 39    binary_expr -> expression > expression
+Rule 40    binary_expr -> expression < expression
+Rule 41    binary_expr -> expression EQUAL expression
+Rule 42    binary_expr -> expression NOTEQUAL expression
+Rule 43    binary_expr -> expression LESSEQUAL expression
+Rule 44    binary_expr -> expression GREATEREQUAL expression
+Rule 45    binary_expr -> expression DOTADD expression
+Rule 46    binary_expr -> expression DOTSUB expression
+Rule 47    binary_expr -> expression DOTMUL expression
+Rule 48    binary_expr -> expression DOTDIV expression
+Rule 49    matrix_init -> ZEROS ( expression )
+Rule 50    matrix_init -> ZEROS ( expression , expression )
+Rule 51    matrix_init -> ONES ( expression )
+Rule 52    matrix_init -> ONES ( expression , expression )
+Rule 53    matrix_init -> EYE ( expression )
+Rule 54    matrix_init -> [ rows ; row ]
+Rule 55    matrix_init -> [ row ]
+Rule 56    rows -> rows ; row
+Rule 57    rows -> row
+Rule 58    row -> row , expression
+Rule 59    row -> expression
+
+Terminals, with rules where they appear
+
+(                    : 49 50 51 52 53
+)                    : 49 50 51 52 53
+*                    : 37
++                    : 35
+,                    : 25 50 52 58
+-                    : 33 36
+/                    : 38
+;                    : 4 6 54 56
+<                    : 40
+=                    : 16
+>                    : 39
+ADDASSIGN            : 
+BREAK                : 
+CONTINUE             : 
+DIVASSIGN            : 20
+DOTADD               : 45
+DOTDIV               : 48
+DOTMUL               : 47
+DOTSUB               : 46
+ELSE                 : 
+EQUAL                : 41
+EYE                  : 53
+FLOAT                : 32
+FOR                  : 
+GREATEREQUAL         : 44
+ID                   : 21 22 23
+IF                   : 
+INT                  : 31
+LESSEQUAL            : 43
+MULASSIGN            : 19
+NOTEQUAL             : 42
+ONES                 : 51 52
+PRINT                : 
+RETURN               : 
+STRING               : 
+SUBASSIGN            : 18
+TRANSP               : 34
+WHILE                : 
+ZEROS                : 49 50
+[                    : 22 54 55
+]                    : 22 54 55
+error                : 
+{                    : 5
+}                    : 5
+
+Nonterminals, with rules where they appear
+
+ADDASIGN             : 17
+array_ref            : 22 25 25
+assign               : 7
+assign_op            : 15
+binary_expr          : 29
+braced_instructions  : 
+break_instruction    : 12
+constant             : 27
+continue_instruction : 13
+end_of_the_line_instruction : 
+expression           : 15 24 33 34 35 35 36 36 37 37 38 38 39 39 40 40 41 41 42 42 43 43 44 44 45 45 46 46 47 47 48 48 49 50 50 51 52 52 53 58 59
+for_instruction      : 9
+if_instructions      : 8
+instruction          : 2 3 4 6
+instructions         : 1 2 5
+matrix_init          : 30
+print_instruction    : 14
+program              : 0
+return_instruction   : 11
+row                  : 54 55 56 57 58
+rows                 : 54 56
+unary_expr           : 28
+variable             : 15 26
+while_instruction    : 10
+

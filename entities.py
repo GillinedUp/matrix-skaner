@@ -68,3 +68,30 @@ class MatrixInit(object):
     def __init__(self, rows, row):
         self.rows = rows
         self.row = row
+
+
+class IfInstruction(object):
+    def __init__(self, expression, instructions, else_if_instructions, else_instructions):
+        self.expression = expression
+        self.instructions = instructions
+        self.else_if_instructions = else_if_instructions
+        self.else_instructions = else_instructions
+
+
+class WhileInstruction(object):
+    def __init__(self, expression, braced_expression):
+        self.expression = expression
+        self.braced_expression = braced_expression
+
+
+class ForInstruction(object):
+    def __init__(self, range_expression, braced_expression):
+        self.range_expression = range_expression
+        self.braced_expression = braced_expression
+
+
+class RangeExpression(object):
+    def __init__(self, id, expression1, expression2):
+        self.id = id
+        self.expression1 = expression1
+        self.expression2 = expression2
