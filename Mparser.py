@@ -68,7 +68,7 @@ def p_instruction(p):
 
 
 def p_assign(p):
-    """assign : variable assign_op expression"""
+    """assign : variable assign_op expression ';'"""
     p[0] = entities.Assign(p[1], p[2], p[3])
 
 
@@ -239,14 +239,14 @@ def p_if_instruction(p):
                       | IF '(' expression ')' instructions else_if_instruction
                       | IF '(' expression ')' instructions else_if_instruction ELSE instructions
     """
-    if len(p) >= 8:
-        p[0] = entities.IfInstruction(p[2], p[4], p[6], p[8])
-    elif len(p) == 6:
-        p[0] = entities.IfInstruction(p[2], p[4], p[6], None)
-    elif len(p) == 4:
-        p[0] = entities.IfInstruction(p[2], p[4], None, None)
+    if len(p) >= 9:
+        p[0] = entities.IfInstruction(p[3], p[5], p[6], p[7])
+    elif len(p) == 7:
+        p[0] = entities.IfInstruction(p[3], p[5], p[6], None)
+    elif len(p) == 5:
+        p[0] = entities.IfInstruction(p[3], p[5], None, None)
     else:
-        p[0] = entities.IfInstruction(p[2], None, None, None)
+        p[0] = entities.IfInstruction(p[3], None, None, None)
 
 
 def p_else_if_instruction(p):

@@ -16,7 +16,7 @@ Rule 10    instruction -> return_instruction
 Rule 11    instruction -> break_instruction
 Rule 12    instruction -> continue_instruction
 Rule 13    instruction -> print_instruction
-Rule 14    assign -> variable assign_op expression
+Rule 14    assign -> variable assign_op expression ;
 Rule 15    assign_op -> =
 Rule 16    assign_op -> ADDASSIGN
 Rule 17    assign_op -> SUBASSIGN
@@ -89,7 +89,7 @@ Terminals, with rules where they appear
 -                    : 32 35
 /                    : 37
 :                    : 75
-;                    : 4 6 53 55 59 60 61 62
+;                    : 4 6 14 53 55 59 60 61 62
 <                    : 39
 =                    : 15 75
 >                    : 38
@@ -171,7 +171,7 @@ state 0
     (11) instruction -> . break_instruction
     (12) instruction -> . continue_instruction
     (13) instruction -> . print_instruction
-    (14) assign -> . variable assign_op expression
+    (14) assign -> . variable assign_op expression ;
     (67) if_instruction -> . IF ( expression ) instructions
     (68) if_instruction -> . IF ( expression ) instructions ELSE instructions
     (69) if_instruction -> . IF ( expression ) instructions else_if_instruction
@@ -223,7 +223,7 @@ state 2
     (11) instruction -> . break_instruction
     (12) instruction -> . continue_instruction
     (13) instruction -> . print_instruction
-    (14) assign -> . variable assign_op expression
+    (14) assign -> . variable assign_op expression ;
     (67) if_instruction -> . IF ( expression ) instructions
     (68) if_instruction -> . IF ( expression ) instructions ELSE instructions
     (69) if_instruction -> . IF ( expression ) instructions else_if_instruction
@@ -403,7 +403,7 @@ state 10
 
 state 11
 
-    (14) assign -> variable . assign_op expression
+    (14) assign -> variable . assign_op expression ;
     (15) assign_op -> . =
     (16) assign_op -> . ADDASSIGN
     (17) assign_op -> . SUBASSIGN
@@ -596,6 +596,10 @@ state 19
     DOTMUL          reduce using rule 20 (variable -> ID .)
     DOTDIV          reduce using rule 20 (variable -> ID .)
     ,               reduce using rule 20 (variable -> ID .)
+    )               reduce using rule 20 (variable -> ID .)
+    ]               reduce using rule 20 (variable -> ID .)
+    :               reduce using rule 20 (variable -> ID .)
+    {               reduce using rule 20 (variable -> ID .)
     IF              reduce using rule 20 (variable -> ID .)
     WHILE           reduce using rule 20 (variable -> ID .)
     FOR             reduce using rule 20 (variable -> ID .)
@@ -604,13 +608,6 @@ state 19
     CONTINUE        reduce using rule 20 (variable -> ID .)
     PRINT           reduce using rule 20 (variable -> ID .)
     ID              reduce using rule 20 (variable -> ID .)
-    $end            reduce using rule 20 (variable -> ID .)
-    }               reduce using rule 20 (variable -> ID .)
-    ELSE            reduce using rule 20 (variable -> ID .)
-    )               reduce using rule 20 (variable -> ID .)
-    ]               reduce using rule 20 (variable -> ID .)
-    :               reduce using rule 20 (variable -> ID .)
-    {               reduce using rule 20 (variable -> ID .)
     [               shift and go to state 50
 
 
@@ -634,7 +631,7 @@ state 20
 
 state 21
 
-    (14) assign -> variable assign_op . expression
+    (14) assign -> variable assign_op . expression ;
     (25) expression -> . variable
     (26) expression -> . constant
     (27) expression -> . unary_expr
@@ -873,7 +870,7 @@ state 29
     (11) instruction -> . break_instruction
     (12) instruction -> . continue_instruction
     (13) instruction -> . print_instruction
-    (14) assign -> . variable assign_op expression
+    (14) assign -> . variable assign_op expression ;
     (67) if_instruction -> . IF ( expression ) instructions
     (68) if_instruction -> . IF ( expression ) instructions ELSE instructions
     (69) if_instruction -> . IF ( expression ) instructions else_if_instruction
@@ -973,6 +970,10 @@ state 32
     DOTMUL          reduce using rule 25 (expression -> variable .)
     DOTDIV          reduce using rule 25 (expression -> variable .)
     ,               reduce using rule 25 (expression -> variable .)
+    )               reduce using rule 25 (expression -> variable .)
+    ]               reduce using rule 25 (expression -> variable .)
+    :               reduce using rule 25 (expression -> variable .)
+    {               reduce using rule 25 (expression -> variable .)
     IF              reduce using rule 25 (expression -> variable .)
     WHILE           reduce using rule 25 (expression -> variable .)
     FOR             reduce using rule 25 (expression -> variable .)
@@ -981,13 +982,6 @@ state 32
     CONTINUE        reduce using rule 25 (expression -> variable .)
     PRINT           reduce using rule 25 (expression -> variable .)
     ID              reduce using rule 25 (expression -> variable .)
-    $end            reduce using rule 25 (expression -> variable .)
-    }               reduce using rule 25 (expression -> variable .)
-    ELSE            reduce using rule 25 (expression -> variable .)
-    )               reduce using rule 25 (expression -> variable .)
-    ]               reduce using rule 25 (expression -> variable .)
-    :               reduce using rule 25 (expression -> variable .)
-    {               reduce using rule 25 (expression -> variable .)
 
 
 state 33
@@ -1011,6 +1005,10 @@ state 33
     DOTMUL          reduce using rule 26 (expression -> constant .)
     DOTDIV          reduce using rule 26 (expression -> constant .)
     ,               reduce using rule 26 (expression -> constant .)
+    )               reduce using rule 26 (expression -> constant .)
+    ]               reduce using rule 26 (expression -> constant .)
+    :               reduce using rule 26 (expression -> constant .)
+    {               reduce using rule 26 (expression -> constant .)
     IF              reduce using rule 26 (expression -> constant .)
     WHILE           reduce using rule 26 (expression -> constant .)
     FOR             reduce using rule 26 (expression -> constant .)
@@ -1019,13 +1017,6 @@ state 33
     CONTINUE        reduce using rule 26 (expression -> constant .)
     PRINT           reduce using rule 26 (expression -> constant .)
     ID              reduce using rule 26 (expression -> constant .)
-    $end            reduce using rule 26 (expression -> constant .)
-    }               reduce using rule 26 (expression -> constant .)
-    ELSE            reduce using rule 26 (expression -> constant .)
-    )               reduce using rule 26 (expression -> constant .)
-    ]               reduce using rule 26 (expression -> constant .)
-    :               reduce using rule 26 (expression -> constant .)
-    {               reduce using rule 26 (expression -> constant .)
 
 
 state 34
@@ -1049,6 +1040,10 @@ state 34
     DOTMUL          reduce using rule 27 (expression -> unary_expr .)
     DOTDIV          reduce using rule 27 (expression -> unary_expr .)
     ,               reduce using rule 27 (expression -> unary_expr .)
+    )               reduce using rule 27 (expression -> unary_expr .)
+    ]               reduce using rule 27 (expression -> unary_expr .)
+    :               reduce using rule 27 (expression -> unary_expr .)
+    {               reduce using rule 27 (expression -> unary_expr .)
     IF              reduce using rule 27 (expression -> unary_expr .)
     WHILE           reduce using rule 27 (expression -> unary_expr .)
     FOR             reduce using rule 27 (expression -> unary_expr .)
@@ -1057,13 +1052,6 @@ state 34
     CONTINUE        reduce using rule 27 (expression -> unary_expr .)
     PRINT           reduce using rule 27 (expression -> unary_expr .)
     ID              reduce using rule 27 (expression -> unary_expr .)
-    $end            reduce using rule 27 (expression -> unary_expr .)
-    }               reduce using rule 27 (expression -> unary_expr .)
-    ELSE            reduce using rule 27 (expression -> unary_expr .)
-    )               reduce using rule 27 (expression -> unary_expr .)
-    ]               reduce using rule 27 (expression -> unary_expr .)
-    :               reduce using rule 27 (expression -> unary_expr .)
-    {               reduce using rule 27 (expression -> unary_expr .)
 
 
 state 35
@@ -1087,6 +1075,10 @@ state 35
     DOTMUL          reduce using rule 28 (expression -> binary_expr .)
     DOTDIV          reduce using rule 28 (expression -> binary_expr .)
     ,               reduce using rule 28 (expression -> binary_expr .)
+    )               reduce using rule 28 (expression -> binary_expr .)
+    ]               reduce using rule 28 (expression -> binary_expr .)
+    :               reduce using rule 28 (expression -> binary_expr .)
+    {               reduce using rule 28 (expression -> binary_expr .)
     IF              reduce using rule 28 (expression -> binary_expr .)
     WHILE           reduce using rule 28 (expression -> binary_expr .)
     FOR             reduce using rule 28 (expression -> binary_expr .)
@@ -1095,13 +1087,6 @@ state 35
     CONTINUE        reduce using rule 28 (expression -> binary_expr .)
     PRINT           reduce using rule 28 (expression -> binary_expr .)
     ID              reduce using rule 28 (expression -> binary_expr .)
-    $end            reduce using rule 28 (expression -> binary_expr .)
-    }               reduce using rule 28 (expression -> binary_expr .)
-    ELSE            reduce using rule 28 (expression -> binary_expr .)
-    )               reduce using rule 28 (expression -> binary_expr .)
-    ]               reduce using rule 28 (expression -> binary_expr .)
-    :               reduce using rule 28 (expression -> binary_expr .)
-    {               reduce using rule 28 (expression -> binary_expr .)
 
 
 state 36
@@ -1125,6 +1110,10 @@ state 36
     DOTMUL          reduce using rule 29 (expression -> matrix_init .)
     DOTDIV          reduce using rule 29 (expression -> matrix_init .)
     ,               reduce using rule 29 (expression -> matrix_init .)
+    )               reduce using rule 29 (expression -> matrix_init .)
+    ]               reduce using rule 29 (expression -> matrix_init .)
+    :               reduce using rule 29 (expression -> matrix_init .)
+    {               reduce using rule 29 (expression -> matrix_init .)
     IF              reduce using rule 29 (expression -> matrix_init .)
     WHILE           reduce using rule 29 (expression -> matrix_init .)
     FOR             reduce using rule 29 (expression -> matrix_init .)
@@ -1133,13 +1122,6 @@ state 36
     CONTINUE        reduce using rule 29 (expression -> matrix_init .)
     PRINT           reduce using rule 29 (expression -> matrix_init .)
     ID              reduce using rule 29 (expression -> matrix_init .)
-    $end            reduce using rule 29 (expression -> matrix_init .)
-    }               reduce using rule 29 (expression -> matrix_init .)
-    ELSE            reduce using rule 29 (expression -> matrix_init .)
-    )               reduce using rule 29 (expression -> matrix_init .)
-    ]               reduce using rule 29 (expression -> matrix_init .)
-    :               reduce using rule 29 (expression -> matrix_init .)
-    {               reduce using rule 29 (expression -> matrix_init .)
 
 
 state 37
@@ -1222,6 +1204,10 @@ state 38
     DOTMUL          reduce using rule 30 (constant -> INT .)
     DOTDIV          reduce using rule 30 (constant -> INT .)
     ,               reduce using rule 30 (constant -> INT .)
+    )               reduce using rule 30 (constant -> INT .)
+    ]               reduce using rule 30 (constant -> INT .)
+    :               reduce using rule 30 (constant -> INT .)
+    {               reduce using rule 30 (constant -> INT .)
     IF              reduce using rule 30 (constant -> INT .)
     WHILE           reduce using rule 30 (constant -> INT .)
     FOR             reduce using rule 30 (constant -> INT .)
@@ -1230,13 +1216,6 @@ state 38
     CONTINUE        reduce using rule 30 (constant -> INT .)
     PRINT           reduce using rule 30 (constant -> INT .)
     ID              reduce using rule 30 (constant -> INT .)
-    $end            reduce using rule 30 (constant -> INT .)
-    }               reduce using rule 30 (constant -> INT .)
-    ELSE            reduce using rule 30 (constant -> INT .)
-    )               reduce using rule 30 (constant -> INT .)
-    ]               reduce using rule 30 (constant -> INT .)
-    :               reduce using rule 30 (constant -> INT .)
-    {               reduce using rule 30 (constant -> INT .)
 
 
 state 39
@@ -1260,6 +1239,10 @@ state 39
     DOTMUL          reduce using rule 31 (constant -> FLOAT .)
     DOTDIV          reduce using rule 31 (constant -> FLOAT .)
     ,               reduce using rule 31 (constant -> FLOAT .)
+    )               reduce using rule 31 (constant -> FLOAT .)
+    ]               reduce using rule 31 (constant -> FLOAT .)
+    :               reduce using rule 31 (constant -> FLOAT .)
+    {               reduce using rule 31 (constant -> FLOAT .)
     IF              reduce using rule 31 (constant -> FLOAT .)
     WHILE           reduce using rule 31 (constant -> FLOAT .)
     FOR             reduce using rule 31 (constant -> FLOAT .)
@@ -1268,13 +1251,6 @@ state 39
     CONTINUE        reduce using rule 31 (constant -> FLOAT .)
     PRINT           reduce using rule 31 (constant -> FLOAT .)
     ID              reduce using rule 31 (constant -> FLOAT .)
-    $end            reduce using rule 31 (constant -> FLOAT .)
-    }               reduce using rule 31 (constant -> FLOAT .)
-    ELSE            reduce using rule 31 (constant -> FLOAT .)
-    )               reduce using rule 31 (constant -> FLOAT .)
-    ]               reduce using rule 31 (constant -> FLOAT .)
-    :               reduce using rule 31 (constant -> FLOAT .)
-    {               reduce using rule 31 (constant -> FLOAT .)
 
 
 state 40
@@ -1509,7 +1485,7 @@ state 50
 
 state 51
 
-    (14) assign -> variable assign_op expression .
+    (14) assign -> variable assign_op expression . ;
     (33) unary_expr -> expression . TRANSP
     (34) binary_expr -> expression . + expression
     (35) binary_expr -> expression . - expression
@@ -1526,18 +1502,7 @@ state 51
     (46) binary_expr -> expression . DOTMUL expression
     (47) binary_expr -> expression . DOTDIV expression
 
-    IF              reduce using rule 14 (assign -> variable assign_op expression .)
-    WHILE           reduce using rule 14 (assign -> variable assign_op expression .)
-    FOR             reduce using rule 14 (assign -> variable assign_op expression .)
-    RETURN          reduce using rule 14 (assign -> variable assign_op expression .)
-    BREAK           reduce using rule 14 (assign -> variable assign_op expression .)
-    CONTINUE        reduce using rule 14 (assign -> variable assign_op expression .)
-    PRINT           reduce using rule 14 (assign -> variable assign_op expression .)
-    ID              reduce using rule 14 (assign -> variable assign_op expression .)
-    $end            reduce using rule 14 (assign -> variable assign_op expression .)
-    ;               reduce using rule 14 (assign -> variable assign_op expression .)
-    }               reduce using rule 14 (assign -> variable assign_op expression .)
-    ELSE            reduce using rule 14 (assign -> variable assign_op expression .)
+    ;               shift and go to state 86
     TRANSP          shift and go to state 59
     +               shift and go to state 60
     -               shift and go to state 61
@@ -1577,7 +1542,7 @@ state 52
     (46) binary_expr -> expression . DOTMUL expression
     (47) binary_expr -> expression . DOTDIV expression
 
-    )               shift and go to state 86
+    )               shift and go to state 87
     TRANSP          shift and go to state 59
     +               shift and go to state 60
     -               shift and go to state 61
@@ -1614,7 +1579,7 @@ state 53
     (46) binary_expr -> expression . DOTMUL expression
     (47) binary_expr -> expression . DOTDIV expression
 
-    )               shift and go to state 87
+    )               shift and go to state 88
     TRANSP          shift and go to state 59
     +               shift and go to state 60
     -               shift and go to state 61
@@ -1662,7 +1627,7 @@ state 55
     (11) instruction -> . break_instruction
     (12) instruction -> . continue_instruction
     (13) instruction -> . print_instruction
-    (14) assign -> . variable assign_op expression
+    (14) assign -> . variable assign_op expression ;
     (67) if_instruction -> . IF ( expression ) instructions
     (68) if_instruction -> . IF ( expression ) instructions ELSE instructions
     (69) if_instruction -> . IF ( expression ) instructions else_if_instruction
@@ -1685,7 +1650,7 @@ state 55
     PRINT           shift and go to state 18
     ID              shift and go to state 19
 
-    instructions                   shift and go to state 88
+    instructions                   shift and go to state 89
     instruction                    shift and go to state 3
     assign                         shift and go to state 4
     if_instruction                 shift and go to state 5
@@ -1700,7 +1665,7 @@ state 56
 
     (6) braced_instructions -> instruction . ;
 
-    ;               shift and go to state 89
+    ;               shift and go to state 90
 
 
 state 57
@@ -1748,7 +1713,7 @@ state 57
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 90
+    expression                     shift and go to state 91
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
@@ -1794,6 +1759,10 @@ state 59
     DOTMUL          reduce using rule 33 (unary_expr -> expression TRANSP .)
     DOTDIV          reduce using rule 33 (unary_expr -> expression TRANSP .)
     ,               reduce using rule 33 (unary_expr -> expression TRANSP .)
+    )               reduce using rule 33 (unary_expr -> expression TRANSP .)
+    ]               reduce using rule 33 (unary_expr -> expression TRANSP .)
+    :               reduce using rule 33 (unary_expr -> expression TRANSP .)
+    {               reduce using rule 33 (unary_expr -> expression TRANSP .)
     IF              reduce using rule 33 (unary_expr -> expression TRANSP .)
     WHILE           reduce using rule 33 (unary_expr -> expression TRANSP .)
     FOR             reduce using rule 33 (unary_expr -> expression TRANSP .)
@@ -1802,13 +1771,6 @@ state 59
     CONTINUE        reduce using rule 33 (unary_expr -> expression TRANSP .)
     PRINT           reduce using rule 33 (unary_expr -> expression TRANSP .)
     ID              reduce using rule 33 (unary_expr -> expression TRANSP .)
-    $end            reduce using rule 33 (unary_expr -> expression TRANSP .)
-    }               reduce using rule 33 (unary_expr -> expression TRANSP .)
-    ELSE            reduce using rule 33 (unary_expr -> expression TRANSP .)
-    )               reduce using rule 33 (unary_expr -> expression TRANSP .)
-    ]               reduce using rule 33 (unary_expr -> expression TRANSP .)
-    :               reduce using rule 33 (unary_expr -> expression TRANSP .)
-    {               reduce using rule 33 (unary_expr -> expression TRANSP .)
 
 
 state 60
@@ -1856,7 +1818,7 @@ state 60
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 91
+    expression                     shift and go to state 92
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
@@ -1908,7 +1870,7 @@ state 61
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 92
+    expression                     shift and go to state 93
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
@@ -1960,7 +1922,7 @@ state 62
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 93
+    expression                     shift and go to state 94
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
@@ -2012,7 +1974,7 @@ state 63
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 94
+    expression                     shift and go to state 95
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
@@ -2064,7 +2026,7 @@ state 64
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 95
+    expression                     shift and go to state 96
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
@@ -2116,7 +2078,7 @@ state 65
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 96
+    expression                     shift and go to state 97
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
@@ -2168,7 +2130,7 @@ state 66
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 97
+    expression                     shift and go to state 98
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
@@ -2220,7 +2182,7 @@ state 67
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 98
+    expression                     shift and go to state 99
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
@@ -2272,7 +2234,7 @@ state 68
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 99
+    expression                     shift and go to state 100
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
@@ -2324,7 +2286,7 @@ state 69
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 100
+    expression                     shift and go to state 101
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
@@ -2376,7 +2338,7 @@ state 70
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 101
+    expression                     shift and go to state 102
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
@@ -2428,7 +2390,7 @@ state 71
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 102
+    expression                     shift and go to state 103
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
@@ -2480,7 +2442,7 @@ state 72
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 103
+    expression                     shift and go to state 104
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
@@ -2532,7 +2494,7 @@ state 73
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 104
+    expression                     shift and go to state 105
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
@@ -2544,7 +2506,7 @@ state 74
     (53) matrix_init -> [ rows . ; row ]
     (55) rows -> rows . ; row
 
-    ;               shift and go to state 105
+    ;               shift and go to state 106
 
 
 state 75
@@ -2553,9 +2515,9 @@ state 75
     (56) rows -> row .
     (57) row -> row . , expression
 
-    ]               shift and go to state 106
+    ]               shift and go to state 107
     ;               reduce using rule 56 (rows -> row .)
-    ,               shift and go to state 107
+    ,               shift and go to state 108
 
 
 state 76
@@ -2627,6 +2589,10 @@ state 77
     LESSEQUAL       reduce using rule 32 (unary_expr -> - expression .)
     GREATEREQUAL    reduce using rule 32 (unary_expr -> - expression .)
     ,               reduce using rule 32 (unary_expr -> - expression .)
+    )               reduce using rule 32 (unary_expr -> - expression .)
+    ]               reduce using rule 32 (unary_expr -> - expression .)
+    :               reduce using rule 32 (unary_expr -> - expression .)
+    {               reduce using rule 32 (unary_expr -> - expression .)
     IF              reduce using rule 32 (unary_expr -> - expression .)
     WHILE           reduce using rule 32 (unary_expr -> - expression .)
     FOR             reduce using rule 32 (unary_expr -> - expression .)
@@ -2635,13 +2601,6 @@ state 77
     CONTINUE        reduce using rule 32 (unary_expr -> - expression .)
     PRINT           reduce using rule 32 (unary_expr -> - expression .)
     ID              reduce using rule 32 (unary_expr -> - expression .)
-    $end            reduce using rule 32 (unary_expr -> - expression .)
-    }               reduce using rule 32 (unary_expr -> - expression .)
-    ELSE            reduce using rule 32 (unary_expr -> - expression .)
-    )               reduce using rule 32 (unary_expr -> - expression .)
-    ]               reduce using rule 32 (unary_expr -> - expression .)
-    :               reduce using rule 32 (unary_expr -> - expression .)
-    {               reduce using rule 32 (unary_expr -> - expression .)
     *               shift and go to state 62
     /               shift and go to state 63
     DOTADD          shift and go to state 70
@@ -2712,7 +2671,7 @@ state 78
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 108
+    expression                     shift and go to state 109
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
@@ -2765,7 +2724,7 @@ state 79
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 109
+    expression                     shift and go to state 110
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
@@ -2817,7 +2776,7 @@ state 80
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 110
+    expression                     shift and go to state 111
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
@@ -2890,7 +2849,7 @@ state 82
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    string_expression              shift and go to state 111
+    string_expression              shift and go to state 112
     expression                     shift and go to state 49
     variable                       shift and go to state 32
     constant                       shift and go to state 33
@@ -2934,8 +2893,8 @@ state 84
     (21) variable -> ID [ array_ref . ]
     (24) array_ref -> array_ref . , array_ref
 
-    ]               shift and go to state 112
-    ,               shift and go to state 113
+    ]               shift and go to state 113
+    ,               shift and go to state 114
 
 
 state 85
@@ -2978,6 +2937,24 @@ state 85
 
 state 86
 
+    (14) assign -> variable assign_op expression ; .
+
+    IF              reduce using rule 14 (assign -> variable assign_op expression ; .)
+    WHILE           reduce using rule 14 (assign -> variable assign_op expression ; .)
+    FOR             reduce using rule 14 (assign -> variable assign_op expression ; .)
+    RETURN          reduce using rule 14 (assign -> variable assign_op expression ; .)
+    BREAK           reduce using rule 14 (assign -> variable assign_op expression ; .)
+    CONTINUE        reduce using rule 14 (assign -> variable assign_op expression ; .)
+    PRINT           reduce using rule 14 (assign -> variable assign_op expression ; .)
+    ID              reduce using rule 14 (assign -> variable assign_op expression ; .)
+    $end            reduce using rule 14 (assign -> variable assign_op expression ; .)
+    ;               reduce using rule 14 (assign -> variable assign_op expression ; .)
+    }               reduce using rule 14 (assign -> variable assign_op expression ; .)
+    ELSE            reduce using rule 14 (assign -> variable assign_op expression ; .)
+
+
+state 87
+
     (67) if_instruction -> IF ( expression ) . instructions
     (68) if_instruction -> IF ( expression ) . instructions ELSE instructions
     (69) if_instruction -> IF ( expression ) . instructions else_if_instruction
@@ -2991,7 +2968,7 @@ state 86
     (11) instruction -> . break_instruction
     (12) instruction -> . continue_instruction
     (13) instruction -> . print_instruction
-    (14) assign -> . variable assign_op expression
+    (14) assign -> . variable assign_op expression ;
     (67) if_instruction -> . IF ( expression ) instructions
     (68) if_instruction -> . IF ( expression ) instructions ELSE instructions
     (69) if_instruction -> . IF ( expression ) instructions else_if_instruction
@@ -3014,7 +2991,7 @@ state 86
     PRINT           shift and go to state 18
     ID              shift and go to state 19
 
-    instructions                   shift and go to state 114
+    instructions                   shift and go to state 115
     instruction                    shift and go to state 3
     assign                         shift and go to state 4
     if_instruction                 shift and go to state 5
@@ -3025,7 +3002,7 @@ state 86
     print_instruction              shift and go to state 10
     variable                       shift and go to state 11
 
-state 87
+state 88
 
     (73) iteration_instruction -> WHILE ( expression ) . braced_instructions
     (5) braced_instructions -> . { instructions }
@@ -3037,7 +3014,7 @@ state 87
     (11) instruction -> . break_instruction
     (12) instruction -> . continue_instruction
     (13) instruction -> . print_instruction
-    (14) assign -> . variable assign_op expression
+    (14) assign -> . variable assign_op expression ;
     (67) if_instruction -> . IF ( expression ) instructions
     (68) if_instruction -> . IF ( expression ) instructions ELSE instructions
     (69) if_instruction -> . IF ( expression ) instructions else_if_instruction
@@ -3061,7 +3038,7 @@ state 87
     PRINT           shift and go to state 18
     ID              shift and go to state 19
 
-    braced_instructions            shift and go to state 115
+    braced_instructions            shift and go to state 116
     instruction                    shift and go to state 56
     assign                         shift and go to state 4
     if_instruction                 shift and go to state 5
@@ -3072,7 +3049,7 @@ state 87
     print_instruction              shift and go to state 10
     variable                       shift and go to state 11
 
-state 88
+state 89
 
     (5) braced_instructions -> { instructions . }
     (2) instructions -> instructions . instruction
@@ -3083,7 +3060,7 @@ state 88
     (11) instruction -> . break_instruction
     (12) instruction -> . continue_instruction
     (13) instruction -> . print_instruction
-    (14) assign -> . variable assign_op expression
+    (14) assign -> . variable assign_op expression ;
     (67) if_instruction -> . IF ( expression ) instructions
     (68) if_instruction -> . IF ( expression ) instructions ELSE instructions
     (69) if_instruction -> . IF ( expression ) instructions else_if_instruction
@@ -3097,7 +3074,7 @@ state 88
     (20) variable -> . ID
     (21) variable -> . ID [ array_ref ]
 
-    }               shift and go to state 116
+    }               shift and go to state 117
     IF              shift and go to state 12
     WHILE           shift and go to state 13
     FOR             shift and go to state 14
@@ -3117,7 +3094,7 @@ state 88
     print_instruction              shift and go to state 10
     variable                       shift and go to state 11
 
-state 89
+state 90
 
     (6) braced_instructions -> instruction ; .
 
@@ -3135,7 +3112,7 @@ state 89
     ELSE            reduce using rule 6 (braced_instructions -> instruction ; .)
 
 
-state 90
+state 91
 
     (75) range_expression -> ID = expression . : expression
     (33) unary_expr -> expression . TRANSP
@@ -3154,7 +3131,7 @@ state 90
     (46) binary_expr -> expression . DOTMUL expression
     (47) binary_expr -> expression . DOTDIV expression
 
-    :               shift and go to state 117
+    :               shift and go to state 118
     TRANSP          shift and go to state 59
     +               shift and go to state 60
     -               shift and go to state 61
@@ -3172,7 +3149,7 @@ state 90
     DOTDIV          shift and go to state 73
 
 
-state 91
+state 92
 
     (34) binary_expr -> expression + expression .
     (33) unary_expr -> expression . TRANSP
@@ -3202,6 +3179,10 @@ state 91
     LESSEQUAL       reduce using rule 34 (binary_expr -> expression + expression .)
     GREATEREQUAL    reduce using rule 34 (binary_expr -> expression + expression .)
     ,               reduce using rule 34 (binary_expr -> expression + expression .)
+    )               reduce using rule 34 (binary_expr -> expression + expression .)
+    ]               reduce using rule 34 (binary_expr -> expression + expression .)
+    :               reduce using rule 34 (binary_expr -> expression + expression .)
+    {               reduce using rule 34 (binary_expr -> expression + expression .)
     IF              reduce using rule 34 (binary_expr -> expression + expression .)
     WHILE           reduce using rule 34 (binary_expr -> expression + expression .)
     FOR             reduce using rule 34 (binary_expr -> expression + expression .)
@@ -3210,13 +3191,6 @@ state 91
     CONTINUE        reduce using rule 34 (binary_expr -> expression + expression .)
     PRINT           reduce using rule 34 (binary_expr -> expression + expression .)
     ID              reduce using rule 34 (binary_expr -> expression + expression .)
-    $end            reduce using rule 34 (binary_expr -> expression + expression .)
-    }               reduce using rule 34 (binary_expr -> expression + expression .)
-    ELSE            reduce using rule 34 (binary_expr -> expression + expression .)
-    )               reduce using rule 34 (binary_expr -> expression + expression .)
-    ]               reduce using rule 34 (binary_expr -> expression + expression .)
-    :               reduce using rule 34 (binary_expr -> expression + expression .)
-    {               reduce using rule 34 (binary_expr -> expression + expression .)
     *               shift and go to state 62
     /               shift and go to state 63
     DOTADD          shift and go to state 70
@@ -3241,7 +3215,7 @@ state 91
   ! GREATEREQUAL    [ shift and go to state 69 ]
 
 
-state 92
+state 93
 
     (35) binary_expr -> expression - expression .
     (33) unary_expr -> expression . TRANSP
@@ -3271,6 +3245,10 @@ state 92
     LESSEQUAL       reduce using rule 35 (binary_expr -> expression - expression .)
     GREATEREQUAL    reduce using rule 35 (binary_expr -> expression - expression .)
     ,               reduce using rule 35 (binary_expr -> expression - expression .)
+    )               reduce using rule 35 (binary_expr -> expression - expression .)
+    ]               reduce using rule 35 (binary_expr -> expression - expression .)
+    :               reduce using rule 35 (binary_expr -> expression - expression .)
+    {               reduce using rule 35 (binary_expr -> expression - expression .)
     IF              reduce using rule 35 (binary_expr -> expression - expression .)
     WHILE           reduce using rule 35 (binary_expr -> expression - expression .)
     FOR             reduce using rule 35 (binary_expr -> expression - expression .)
@@ -3279,13 +3257,6 @@ state 92
     CONTINUE        reduce using rule 35 (binary_expr -> expression - expression .)
     PRINT           reduce using rule 35 (binary_expr -> expression - expression .)
     ID              reduce using rule 35 (binary_expr -> expression - expression .)
-    $end            reduce using rule 35 (binary_expr -> expression - expression .)
-    }               reduce using rule 35 (binary_expr -> expression - expression .)
-    ELSE            reduce using rule 35 (binary_expr -> expression - expression .)
-    )               reduce using rule 35 (binary_expr -> expression - expression .)
-    ]               reduce using rule 35 (binary_expr -> expression - expression .)
-    :               reduce using rule 35 (binary_expr -> expression - expression .)
-    {               reduce using rule 35 (binary_expr -> expression - expression .)
     *               shift and go to state 62
     /               shift and go to state 63
     DOTADD          shift and go to state 70
@@ -3310,7 +3281,7 @@ state 92
   ! GREATEREQUAL    [ shift and go to state 69 ]
 
 
-state 93
+state 94
 
     (36) binary_expr -> expression * expression .
     (33) unary_expr -> expression . TRANSP
@@ -3342,6 +3313,10 @@ state 93
     LESSEQUAL       reduce using rule 36 (binary_expr -> expression * expression .)
     GREATEREQUAL    reduce using rule 36 (binary_expr -> expression * expression .)
     ,               reduce using rule 36 (binary_expr -> expression * expression .)
+    )               reduce using rule 36 (binary_expr -> expression * expression .)
+    ]               reduce using rule 36 (binary_expr -> expression * expression .)
+    :               reduce using rule 36 (binary_expr -> expression * expression .)
+    {               reduce using rule 36 (binary_expr -> expression * expression .)
     IF              reduce using rule 36 (binary_expr -> expression * expression .)
     WHILE           reduce using rule 36 (binary_expr -> expression * expression .)
     FOR             reduce using rule 36 (binary_expr -> expression * expression .)
@@ -3350,13 +3325,6 @@ state 93
     CONTINUE        reduce using rule 36 (binary_expr -> expression * expression .)
     PRINT           reduce using rule 36 (binary_expr -> expression * expression .)
     ID              reduce using rule 36 (binary_expr -> expression * expression .)
-    $end            reduce using rule 36 (binary_expr -> expression * expression .)
-    }               reduce using rule 36 (binary_expr -> expression * expression .)
-    ELSE            reduce using rule 36 (binary_expr -> expression * expression .)
-    )               reduce using rule 36 (binary_expr -> expression * expression .)
-    ]               reduce using rule 36 (binary_expr -> expression * expression .)
-    :               reduce using rule 36 (binary_expr -> expression * expression .)
-    {               reduce using rule 36 (binary_expr -> expression * expression .)
     DOTADD          shift and go to state 70
     DOTSUB          shift and go to state 71
     DOTMUL          shift and go to state 72
@@ -3379,7 +3347,7 @@ state 93
   ! GREATEREQUAL    [ shift and go to state 69 ]
 
 
-state 94
+state 95
 
     (37) binary_expr -> expression / expression .
     (33) unary_expr -> expression . TRANSP
@@ -3411,6 +3379,10 @@ state 94
     LESSEQUAL       reduce using rule 37 (binary_expr -> expression / expression .)
     GREATEREQUAL    reduce using rule 37 (binary_expr -> expression / expression .)
     ,               reduce using rule 37 (binary_expr -> expression / expression .)
+    )               reduce using rule 37 (binary_expr -> expression / expression .)
+    ]               reduce using rule 37 (binary_expr -> expression / expression .)
+    :               reduce using rule 37 (binary_expr -> expression / expression .)
+    {               reduce using rule 37 (binary_expr -> expression / expression .)
     IF              reduce using rule 37 (binary_expr -> expression / expression .)
     WHILE           reduce using rule 37 (binary_expr -> expression / expression .)
     FOR             reduce using rule 37 (binary_expr -> expression / expression .)
@@ -3419,13 +3391,6 @@ state 94
     CONTINUE        reduce using rule 37 (binary_expr -> expression / expression .)
     PRINT           reduce using rule 37 (binary_expr -> expression / expression .)
     ID              reduce using rule 37 (binary_expr -> expression / expression .)
-    $end            reduce using rule 37 (binary_expr -> expression / expression .)
-    }               reduce using rule 37 (binary_expr -> expression / expression .)
-    ELSE            reduce using rule 37 (binary_expr -> expression / expression .)
-    )               reduce using rule 37 (binary_expr -> expression / expression .)
-    ]               reduce using rule 37 (binary_expr -> expression / expression .)
-    :               reduce using rule 37 (binary_expr -> expression / expression .)
-    {               reduce using rule 37 (binary_expr -> expression / expression .)
     DOTADD          shift and go to state 70
     DOTSUB          shift and go to state 71
     DOTMUL          shift and go to state 72
@@ -3448,7 +3413,7 @@ state 94
   ! GREATEREQUAL    [ shift and go to state 69 ]
 
 
-state 95
+state 96
 
     (38) binary_expr -> expression > expression .
     (33) unary_expr -> expression . TRANSP
@@ -3476,6 +3441,10 @@ state 95
     LESSEQUAL       reduce using rule 38 (binary_expr -> expression > expression .)
     GREATEREQUAL    reduce using rule 38 (binary_expr -> expression > expression .)
     ,               reduce using rule 38 (binary_expr -> expression > expression .)
+    )               reduce using rule 38 (binary_expr -> expression > expression .)
+    ]               reduce using rule 38 (binary_expr -> expression > expression .)
+    :               reduce using rule 38 (binary_expr -> expression > expression .)
+    {               reduce using rule 38 (binary_expr -> expression > expression .)
     IF              reduce using rule 38 (binary_expr -> expression > expression .)
     WHILE           reduce using rule 38 (binary_expr -> expression > expression .)
     FOR             reduce using rule 38 (binary_expr -> expression > expression .)
@@ -3484,13 +3453,6 @@ state 95
     CONTINUE        reduce using rule 38 (binary_expr -> expression > expression .)
     PRINT           reduce using rule 38 (binary_expr -> expression > expression .)
     ID              reduce using rule 38 (binary_expr -> expression > expression .)
-    $end            reduce using rule 38 (binary_expr -> expression > expression .)
-    }               reduce using rule 38 (binary_expr -> expression > expression .)
-    ELSE            reduce using rule 38 (binary_expr -> expression > expression .)
-    )               reduce using rule 38 (binary_expr -> expression > expression .)
-    ]               reduce using rule 38 (binary_expr -> expression > expression .)
-    :               reduce using rule 38 (binary_expr -> expression > expression .)
-    {               reduce using rule 38 (binary_expr -> expression > expression .)
     +               shift and go to state 60
     -               shift and go to state 61
     *               shift and go to state 62
@@ -3517,7 +3479,7 @@ state 95
   ! GREATEREQUAL    [ shift and go to state 69 ]
 
 
-state 96
+state 97
 
     (39) binary_expr -> expression < expression .
     (33) unary_expr -> expression . TRANSP
@@ -3545,6 +3507,10 @@ state 96
     LESSEQUAL       reduce using rule 39 (binary_expr -> expression < expression .)
     GREATEREQUAL    reduce using rule 39 (binary_expr -> expression < expression .)
     ,               reduce using rule 39 (binary_expr -> expression < expression .)
+    )               reduce using rule 39 (binary_expr -> expression < expression .)
+    ]               reduce using rule 39 (binary_expr -> expression < expression .)
+    :               reduce using rule 39 (binary_expr -> expression < expression .)
+    {               reduce using rule 39 (binary_expr -> expression < expression .)
     IF              reduce using rule 39 (binary_expr -> expression < expression .)
     WHILE           reduce using rule 39 (binary_expr -> expression < expression .)
     FOR             reduce using rule 39 (binary_expr -> expression < expression .)
@@ -3553,13 +3519,6 @@ state 96
     CONTINUE        reduce using rule 39 (binary_expr -> expression < expression .)
     PRINT           reduce using rule 39 (binary_expr -> expression < expression .)
     ID              reduce using rule 39 (binary_expr -> expression < expression .)
-    $end            reduce using rule 39 (binary_expr -> expression < expression .)
-    }               reduce using rule 39 (binary_expr -> expression < expression .)
-    ELSE            reduce using rule 39 (binary_expr -> expression < expression .)
-    )               reduce using rule 39 (binary_expr -> expression < expression .)
-    ]               reduce using rule 39 (binary_expr -> expression < expression .)
-    :               reduce using rule 39 (binary_expr -> expression < expression .)
-    {               reduce using rule 39 (binary_expr -> expression < expression .)
     +               shift and go to state 60
     -               shift and go to state 61
     *               shift and go to state 62
@@ -3586,7 +3545,7 @@ state 96
   ! GREATEREQUAL    [ shift and go to state 69 ]
 
 
-state 97
+state 98
 
     (40) binary_expr -> expression EQUAL expression .
     (33) unary_expr -> expression . TRANSP
@@ -3614,6 +3573,10 @@ state 97
     LESSEQUAL       reduce using rule 40 (binary_expr -> expression EQUAL expression .)
     GREATEREQUAL    reduce using rule 40 (binary_expr -> expression EQUAL expression .)
     ,               reduce using rule 40 (binary_expr -> expression EQUAL expression .)
+    )               reduce using rule 40 (binary_expr -> expression EQUAL expression .)
+    ]               reduce using rule 40 (binary_expr -> expression EQUAL expression .)
+    :               reduce using rule 40 (binary_expr -> expression EQUAL expression .)
+    {               reduce using rule 40 (binary_expr -> expression EQUAL expression .)
     IF              reduce using rule 40 (binary_expr -> expression EQUAL expression .)
     WHILE           reduce using rule 40 (binary_expr -> expression EQUAL expression .)
     FOR             reduce using rule 40 (binary_expr -> expression EQUAL expression .)
@@ -3622,13 +3585,6 @@ state 97
     CONTINUE        reduce using rule 40 (binary_expr -> expression EQUAL expression .)
     PRINT           reduce using rule 40 (binary_expr -> expression EQUAL expression .)
     ID              reduce using rule 40 (binary_expr -> expression EQUAL expression .)
-    $end            reduce using rule 40 (binary_expr -> expression EQUAL expression .)
-    }               reduce using rule 40 (binary_expr -> expression EQUAL expression .)
-    ELSE            reduce using rule 40 (binary_expr -> expression EQUAL expression .)
-    )               reduce using rule 40 (binary_expr -> expression EQUAL expression .)
-    ]               reduce using rule 40 (binary_expr -> expression EQUAL expression .)
-    :               reduce using rule 40 (binary_expr -> expression EQUAL expression .)
-    {               reduce using rule 40 (binary_expr -> expression EQUAL expression .)
     +               shift and go to state 60
     -               shift and go to state 61
     *               shift and go to state 62
@@ -3655,7 +3611,7 @@ state 97
   ! GREATEREQUAL    [ shift and go to state 69 ]
 
 
-state 98
+state 99
 
     (41) binary_expr -> expression NOTEQUAL expression .
     (33) unary_expr -> expression . TRANSP
@@ -3683,6 +3639,10 @@ state 98
     LESSEQUAL       reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
     GREATEREQUAL    reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
     ,               reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
+    )               reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
+    ]               reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
+    :               reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
+    {               reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
     IF              reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
     WHILE           reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
     FOR             reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
@@ -3691,13 +3651,6 @@ state 98
     CONTINUE        reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
     PRINT           reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
     ID              reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
-    $end            reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
-    }               reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
-    ELSE            reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
-    )               reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
-    ]               reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
-    :               reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
-    {               reduce using rule 41 (binary_expr -> expression NOTEQUAL expression .)
     +               shift and go to state 60
     -               shift and go to state 61
     *               shift and go to state 62
@@ -3724,7 +3677,7 @@ state 98
   ! GREATEREQUAL    [ shift and go to state 69 ]
 
 
-state 99
+state 100
 
     (42) binary_expr -> expression LESSEQUAL expression .
     (33) unary_expr -> expression . TRANSP
@@ -3752,6 +3705,10 @@ state 99
     LESSEQUAL       reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
     GREATEREQUAL    reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
     ,               reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
+    )               reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
+    ]               reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
+    :               reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
+    {               reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
     IF              reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
     WHILE           reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
     FOR             reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
@@ -3760,13 +3717,6 @@ state 99
     CONTINUE        reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
     PRINT           reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
     ID              reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
-    $end            reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
-    }               reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
-    ELSE            reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
-    )               reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
-    ]               reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
-    :               reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
-    {               reduce using rule 42 (binary_expr -> expression LESSEQUAL expression .)
     +               shift and go to state 60
     -               shift and go to state 61
     *               shift and go to state 62
@@ -3793,7 +3743,7 @@ state 99
   ! GREATEREQUAL    [ shift and go to state 69 ]
 
 
-state 100
+state 101
 
     (43) binary_expr -> expression GREATEREQUAL expression .
     (33) unary_expr -> expression . TRANSP
@@ -3821,6 +3771,10 @@ state 100
     LESSEQUAL       reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
     GREATEREQUAL    reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
     ,               reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
+    )               reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
+    ]               reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
+    :               reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
+    {               reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
     IF              reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
     WHILE           reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
     FOR             reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
@@ -3829,13 +3783,6 @@ state 100
     CONTINUE        reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
     PRINT           reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
     ID              reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
-    $end            reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
-    }               reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
-    ELSE            reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
-    )               reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
-    ]               reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
-    :               reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
-    {               reduce using rule 43 (binary_expr -> expression GREATEREQUAL expression .)
     +               shift and go to state 60
     -               shift and go to state 61
     *               shift and go to state 62
@@ -3862,7 +3809,7 @@ state 100
   ! GREATEREQUAL    [ shift and go to state 69 ]
 
 
-state 101
+state 102
 
     (44) binary_expr -> expression DOTADD expression .
     (33) unary_expr -> expression . TRANSP
@@ -3896,6 +3843,10 @@ state 101
     DOTADD          reduce using rule 44 (binary_expr -> expression DOTADD expression .)
     DOTSUB          reduce using rule 44 (binary_expr -> expression DOTADD expression .)
     ,               reduce using rule 44 (binary_expr -> expression DOTADD expression .)
+    )               reduce using rule 44 (binary_expr -> expression DOTADD expression .)
+    ]               reduce using rule 44 (binary_expr -> expression DOTADD expression .)
+    :               reduce using rule 44 (binary_expr -> expression DOTADD expression .)
+    {               reduce using rule 44 (binary_expr -> expression DOTADD expression .)
     IF              reduce using rule 44 (binary_expr -> expression DOTADD expression .)
     WHILE           reduce using rule 44 (binary_expr -> expression DOTADD expression .)
     FOR             reduce using rule 44 (binary_expr -> expression DOTADD expression .)
@@ -3904,13 +3855,6 @@ state 101
     CONTINUE        reduce using rule 44 (binary_expr -> expression DOTADD expression .)
     PRINT           reduce using rule 44 (binary_expr -> expression DOTADD expression .)
     ID              reduce using rule 44 (binary_expr -> expression DOTADD expression .)
-    $end            reduce using rule 44 (binary_expr -> expression DOTADD expression .)
-    }               reduce using rule 44 (binary_expr -> expression DOTADD expression .)
-    ELSE            reduce using rule 44 (binary_expr -> expression DOTADD expression .)
-    )               reduce using rule 44 (binary_expr -> expression DOTADD expression .)
-    ]               reduce using rule 44 (binary_expr -> expression DOTADD expression .)
-    :               reduce using rule 44 (binary_expr -> expression DOTADD expression .)
-    {               reduce using rule 44 (binary_expr -> expression DOTADD expression .)
     DOTMUL          shift and go to state 72
     DOTDIV          shift and go to state 73
 
@@ -3931,7 +3875,7 @@ state 101
   ! DOTSUB          [ shift and go to state 71 ]
 
 
-state 102
+state 103
 
     (45) binary_expr -> expression DOTSUB expression .
     (33) unary_expr -> expression . TRANSP
@@ -3965,6 +3909,10 @@ state 102
     DOTADD          reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
     DOTSUB          reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
     ,               reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
+    )               reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
+    ]               reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
+    :               reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
+    {               reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
     IF              reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
     WHILE           reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
     FOR             reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
@@ -3973,13 +3921,6 @@ state 102
     CONTINUE        reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
     PRINT           reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
     ID              reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
-    $end            reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
-    }               reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
-    ELSE            reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
-    )               reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
-    ]               reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
-    :               reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
-    {               reduce using rule 45 (binary_expr -> expression DOTSUB expression .)
     DOTMUL          shift and go to state 72
     DOTDIV          shift and go to state 73
 
@@ -4000,7 +3941,7 @@ state 102
   ! DOTSUB          [ shift and go to state 71 ]
 
 
-state 103
+state 104
 
     (46) binary_expr -> expression DOTMUL expression .
     (33) unary_expr -> expression . TRANSP
@@ -4036,6 +3977,10 @@ state 103
     DOTMUL          reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
     DOTDIV          reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
     ,               reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
+    )               reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
+    ]               reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
+    :               reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
+    {               reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
     IF              reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
     WHILE           reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
     FOR             reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
@@ -4044,13 +3989,6 @@ state 103
     CONTINUE        reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
     PRINT           reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
     ID              reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
-    $end            reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
-    }               reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
-    ELSE            reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
-    )               reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
-    ]               reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
-    :               reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
-    {               reduce using rule 46 (binary_expr -> expression DOTMUL expression .)
 
   ! TRANSP          [ shift and go to state 59 ]
   ! +               [ shift and go to state 60 ]
@@ -4069,7 +4007,7 @@ state 103
   ! DOTDIV          [ shift and go to state 73 ]
 
 
-state 104
+state 105
 
     (47) binary_expr -> expression DOTDIV expression .
     (33) unary_expr -> expression . TRANSP
@@ -4105,6 +4043,10 @@ state 104
     DOTMUL          reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
     DOTDIV          reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
     ,               reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
+    )               reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
+    ]               reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
+    :               reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
+    {               reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
     IF              reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
     WHILE           reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
     FOR             reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
@@ -4113,13 +4055,6 @@ state 104
     CONTINUE        reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
     PRINT           reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
     ID              reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
-    $end            reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
-    }               reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
-    ELSE            reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
-    )               reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
-    ]               reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
-    :               reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
-    {               reduce using rule 47 (binary_expr -> expression DOTDIV expression .)
 
   ! TRANSP          [ shift and go to state 59 ]
   ! +               [ shift and go to state 60 ]
@@ -4138,7 +4073,7 @@ state 104
   ! DOTDIV          [ shift and go to state 73 ]
 
 
-state 105
+state 106
 
     (53) matrix_init -> [ rows ; . row ]
     (55) rows -> rows ; . row
@@ -4186,7 +4121,7 @@ state 105
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    row                            shift and go to state 118
+    row                            shift and go to state 119
     expression                     shift and go to state 76
     variable                       shift and go to state 32
     constant                       shift and go to state 33
@@ -4194,7 +4129,7 @@ state 105
     binary_expr                    shift and go to state 35
     matrix_init                    shift and go to state 36
 
-state 106
+state 107
 
     (54) matrix_init -> [ row ] .
 
@@ -4215,6 +4150,10 @@ state 106
     DOTMUL          reduce using rule 54 (matrix_init -> [ row ] .)
     DOTDIV          reduce using rule 54 (matrix_init -> [ row ] .)
     ,               reduce using rule 54 (matrix_init -> [ row ] .)
+    )               reduce using rule 54 (matrix_init -> [ row ] .)
+    ]               reduce using rule 54 (matrix_init -> [ row ] .)
+    :               reduce using rule 54 (matrix_init -> [ row ] .)
+    {               reduce using rule 54 (matrix_init -> [ row ] .)
     IF              reduce using rule 54 (matrix_init -> [ row ] .)
     WHILE           reduce using rule 54 (matrix_init -> [ row ] .)
     FOR             reduce using rule 54 (matrix_init -> [ row ] .)
@@ -4223,16 +4162,9 @@ state 106
     CONTINUE        reduce using rule 54 (matrix_init -> [ row ] .)
     PRINT           reduce using rule 54 (matrix_init -> [ row ] .)
     ID              reduce using rule 54 (matrix_init -> [ row ] .)
-    $end            reduce using rule 54 (matrix_init -> [ row ] .)
-    }               reduce using rule 54 (matrix_init -> [ row ] .)
-    ELSE            reduce using rule 54 (matrix_init -> [ row ] .)
-    )               reduce using rule 54 (matrix_init -> [ row ] .)
-    ]               reduce using rule 54 (matrix_init -> [ row ] .)
-    :               reduce using rule 54 (matrix_init -> [ row ] .)
-    {               reduce using rule 54 (matrix_init -> [ row ] .)
 
 
-state 107
+state 108
 
     (57) row -> row , . expression
     (25) expression -> . variable
@@ -4277,14 +4209,14 @@ state 107
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 119
+    expression                     shift and go to state 120
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
     binary_expr                    shift and go to state 35
     matrix_init                    shift and go to state 36
 
-state 108
+state 109
 
     (48) matrix_init -> ZEROS ( expression . )
     (49) matrix_init -> ZEROS ( expression . , expression )
@@ -4304,47 +4236,8 @@ state 108
     (46) binary_expr -> expression . DOTMUL expression
     (47) binary_expr -> expression . DOTDIV expression
 
-    )               shift and go to state 120
-    ,               shift and go to state 121
-    TRANSP          shift and go to state 59
-    +               shift and go to state 60
-    -               shift and go to state 61
-    *               shift and go to state 62
-    /               shift and go to state 63
-    >               shift and go to state 64
-    <               shift and go to state 65
-    EQUAL           shift and go to state 66
-    NOTEQUAL        shift and go to state 67
-    LESSEQUAL       shift and go to state 68
-    GREATEREQUAL    shift and go to state 69
-    DOTADD          shift and go to state 70
-    DOTSUB          shift and go to state 71
-    DOTMUL          shift and go to state 72
-    DOTDIV          shift and go to state 73
-
-
-state 109
-
-    (50) matrix_init -> ONES ( expression . )
-    (51) matrix_init -> ONES ( expression . , expression )
-    (33) unary_expr -> expression . TRANSP
-    (34) binary_expr -> expression . + expression
-    (35) binary_expr -> expression . - expression
-    (36) binary_expr -> expression . * expression
-    (37) binary_expr -> expression . / expression
-    (38) binary_expr -> expression . > expression
-    (39) binary_expr -> expression . < expression
-    (40) binary_expr -> expression . EQUAL expression
-    (41) binary_expr -> expression . NOTEQUAL expression
-    (42) binary_expr -> expression . LESSEQUAL expression
-    (43) binary_expr -> expression . GREATEREQUAL expression
-    (44) binary_expr -> expression . DOTADD expression
-    (45) binary_expr -> expression . DOTSUB expression
-    (46) binary_expr -> expression . DOTMUL expression
-    (47) binary_expr -> expression . DOTDIV expression
-
-    )               shift and go to state 122
-    ,               shift and go to state 123
+    )               shift and go to state 121
+    ,               shift and go to state 122
     TRANSP          shift and go to state 59
     +               shift and go to state 60
     -               shift and go to state 61
@@ -4364,7 +4257,8 @@ state 109
 
 state 110
 
-    (52) matrix_init -> EYE ( expression . )
+    (50) matrix_init -> ONES ( expression . )
+    (51) matrix_init -> ONES ( expression . , expression )
     (33) unary_expr -> expression . TRANSP
     (34) binary_expr -> expression . + expression
     (35) binary_expr -> expression . - expression
@@ -4381,7 +4275,8 @@ state 110
     (46) binary_expr -> expression . DOTMUL expression
     (47) binary_expr -> expression . DOTDIV expression
 
-    )               shift and go to state 124
+    )               shift and go to state 123
+    ,               shift and go to state 124
     TRANSP          shift and go to state 59
     +               shift and go to state 60
     -               shift and go to state 61
@@ -4401,13 +4296,50 @@ state 110
 
 state 111
 
+    (52) matrix_init -> EYE ( expression . )
+    (33) unary_expr -> expression . TRANSP
+    (34) binary_expr -> expression . + expression
+    (35) binary_expr -> expression . - expression
+    (36) binary_expr -> expression . * expression
+    (37) binary_expr -> expression . / expression
+    (38) binary_expr -> expression . > expression
+    (39) binary_expr -> expression . < expression
+    (40) binary_expr -> expression . EQUAL expression
+    (41) binary_expr -> expression . NOTEQUAL expression
+    (42) binary_expr -> expression . LESSEQUAL expression
+    (43) binary_expr -> expression . GREATEREQUAL expression
+    (44) binary_expr -> expression . DOTADD expression
+    (45) binary_expr -> expression . DOTSUB expression
+    (46) binary_expr -> expression . DOTMUL expression
+    (47) binary_expr -> expression . DOTDIV expression
+
+    )               shift and go to state 125
+    TRANSP          shift and go to state 59
+    +               shift and go to state 60
+    -               shift and go to state 61
+    *               shift and go to state 62
+    /               shift and go to state 63
+    >               shift and go to state 64
+    <               shift and go to state 65
+    EQUAL           shift and go to state 66
+    NOTEQUAL        shift and go to state 67
+    LESSEQUAL       shift and go to state 68
+    GREATEREQUAL    shift and go to state 69
+    DOTADD          shift and go to state 70
+    DOTSUB          shift and go to state 71
+    DOTMUL          shift and go to state 72
+    DOTDIV          shift and go to state 73
+
+
+state 112
+
     (63) string_expressions -> string_expressions , string_expression .
 
     ;               reduce using rule 63 (string_expressions -> string_expressions , string_expression .)
     ,               reduce using rule 63 (string_expressions -> string_expressions , string_expression .)
 
 
-state 112
+state 113
 
     (21) variable -> ID [ array_ref ] .
 
@@ -4433,6 +4365,10 @@ state 112
     DOTMUL          reduce using rule 21 (variable -> ID [ array_ref ] .)
     DOTDIV          reduce using rule 21 (variable -> ID [ array_ref ] .)
     ,               reduce using rule 21 (variable -> ID [ array_ref ] .)
+    )               reduce using rule 21 (variable -> ID [ array_ref ] .)
+    ]               reduce using rule 21 (variable -> ID [ array_ref ] .)
+    :               reduce using rule 21 (variable -> ID [ array_ref ] .)
+    {               reduce using rule 21 (variable -> ID [ array_ref ] .)
     IF              reduce using rule 21 (variable -> ID [ array_ref ] .)
     WHILE           reduce using rule 21 (variable -> ID [ array_ref ] .)
     FOR             reduce using rule 21 (variable -> ID [ array_ref ] .)
@@ -4441,16 +4377,9 @@ state 112
     CONTINUE        reduce using rule 21 (variable -> ID [ array_ref ] .)
     PRINT           reduce using rule 21 (variable -> ID [ array_ref ] .)
     ID              reduce using rule 21 (variable -> ID [ array_ref ] .)
-    $end            reduce using rule 21 (variable -> ID [ array_ref ] .)
-    }               reduce using rule 21 (variable -> ID [ array_ref ] .)
-    ELSE            reduce using rule 21 (variable -> ID [ array_ref ] .)
-    )               reduce using rule 21 (variable -> ID [ array_ref ] .)
-    ]               reduce using rule 21 (variable -> ID [ array_ref ] .)
-    :               reduce using rule 21 (variable -> ID [ array_ref ] .)
-    {               reduce using rule 21 (variable -> ID [ array_ref ] .)
 
 
-state 113
+state 114
 
     (24) array_ref -> array_ref , . array_ref
     (22) array_ref -> . ID
@@ -4498,7 +4427,7 @@ state 113
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    array_ref                      shift and go to state 125
+    array_ref                      shift and go to state 126
     expression                     shift and go to state 85
     variable                       shift and go to state 32
     constant                       shift and go to state 33
@@ -4506,7 +4435,7 @@ state 113
     binary_expr                    shift and go to state 35
     matrix_init                    shift and go to state 36
 
-state 114
+state 115
 
     (67) if_instruction -> IF ( expression ) instructions .
     (68) if_instruction -> IF ( expression ) instructions . ELSE instructions
@@ -4522,7 +4451,7 @@ state 114
     (11) instruction -> . break_instruction
     (12) instruction -> . continue_instruction
     (13) instruction -> . print_instruction
-    (14) assign -> . variable assign_op expression
+    (14) assign -> . variable assign_op expression ;
     (67) if_instruction -> . IF ( expression ) instructions
     (68) if_instruction -> . IF ( expression ) instructions ELSE instructions
     (69) if_instruction -> . IF ( expression ) instructions else_if_instruction
@@ -4548,7 +4477,7 @@ state 114
     $end            reduce using rule 67 (if_instruction -> IF ( expression ) instructions .)
     ;               reduce using rule 67 (if_instruction -> IF ( expression ) instructions .)
     }               reduce using rule 67 (if_instruction -> IF ( expression ) instructions .)
-    ELSE            shift and go to state 126
+    ELSE            shift and go to state 127
     IF              shift and go to state 12
     WHILE           shift and go to state 13
     FOR             shift and go to state 14
@@ -4568,7 +4497,7 @@ state 114
   ! ID              [ reduce using rule 67 (if_instruction -> IF ( expression ) instructions .) ]
   ! ELSE            [ reduce using rule 67 (if_instruction -> IF ( expression ) instructions .) ]
 
-    else_if_instruction            shift and go to state 127
+    else_if_instruction            shift and go to state 128
     instruction                    shift and go to state 20
     assign                         shift and go to state 4
     if_instruction                 shift and go to state 5
@@ -4579,7 +4508,7 @@ state 114
     print_instruction              shift and go to state 10
     variable                       shift and go to state 11
 
-state 115
+state 116
 
     (73) iteration_instruction -> WHILE ( expression ) braced_instructions .
 
@@ -4597,7 +4526,7 @@ state 115
     ELSE            reduce using rule 73 (iteration_instruction -> WHILE ( expression ) braced_instructions .)
 
 
-state 116
+state 117
 
     (5) braced_instructions -> { instructions } .
 
@@ -4615,7 +4544,7 @@ state 116
     ELSE            reduce using rule 5 (braced_instructions -> { instructions } .)
 
 
-state 117
+state 118
 
     (75) range_expression -> ID = expression : . expression
     (25) expression -> . variable
@@ -4660,25 +4589,25 @@ state 117
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 128
+    expression                     shift and go to state 129
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
     binary_expr                    shift and go to state 35
     matrix_init                    shift and go to state 36
 
-state 118
+state 119
 
     (53) matrix_init -> [ rows ; row . ]
     (55) rows -> rows ; row .
     (57) row -> row . , expression
 
-    ]               shift and go to state 129
+    ]               shift and go to state 130
     ;               reduce using rule 55 (rows -> rows ; row .)
-    ,               shift and go to state 107
+    ,               shift and go to state 108
 
 
-state 119
+state 120
 
     (57) row -> row , expression .
     (33) unary_expr -> expression . TRANSP
@@ -4717,7 +4646,7 @@ state 119
     DOTDIV          shift and go to state 73
 
 
-state 120
+state 121
 
     (48) matrix_init -> ZEROS ( expression ) .
 
@@ -4738,6 +4667,10 @@ state 120
     DOTMUL          reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
     DOTDIV          reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
     ,               reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
+    )               reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
+    ]               reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
+    :               reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
+    {               reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
     IF              reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
     WHILE           reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
     FOR             reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
@@ -4746,108 +4679,11 @@ state 120
     CONTINUE        reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
     PRINT           reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
     ID              reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
-    $end            reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
-    }               reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
-    ELSE            reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
-    )               reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
-    ]               reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
-    :               reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
-    {               reduce using rule 48 (matrix_init -> ZEROS ( expression ) .)
 
-
-state 121
-
-    (49) matrix_init -> ZEROS ( expression , . expression )
-    (25) expression -> . variable
-    (26) expression -> . constant
-    (27) expression -> . unary_expr
-    (28) expression -> . binary_expr
-    (29) expression -> . matrix_init
-    (20) variable -> . ID
-    (21) variable -> . ID [ array_ref ]
-    (30) constant -> . INT
-    (31) constant -> . FLOAT
-    (32) unary_expr -> . - expression
-    (33) unary_expr -> . expression TRANSP
-    (34) binary_expr -> . expression + expression
-    (35) binary_expr -> . expression - expression
-    (36) binary_expr -> . expression * expression
-    (37) binary_expr -> . expression / expression
-    (38) binary_expr -> . expression > expression
-    (39) binary_expr -> . expression < expression
-    (40) binary_expr -> . expression EQUAL expression
-    (41) binary_expr -> . expression NOTEQUAL expression
-    (42) binary_expr -> . expression LESSEQUAL expression
-    (43) binary_expr -> . expression GREATEREQUAL expression
-    (44) binary_expr -> . expression DOTADD expression
-    (45) binary_expr -> . expression DOTSUB expression
-    (46) binary_expr -> . expression DOTMUL expression
-    (47) binary_expr -> . expression DOTDIV expression
-    (48) matrix_init -> . ZEROS ( expression )
-    (49) matrix_init -> . ZEROS ( expression , expression )
-    (50) matrix_init -> . ONES ( expression )
-    (51) matrix_init -> . ONES ( expression , expression )
-    (52) matrix_init -> . EYE ( expression )
-    (53) matrix_init -> . [ rows ; row ]
-    (54) matrix_init -> . [ row ]
-
-    ID              shift and go to state 19
-    INT             shift and go to state 38
-    FLOAT           shift and go to state 39
-    -               shift and go to state 40
-    ZEROS           shift and go to state 41
-    ONES            shift and go to state 42
-    EYE             shift and go to state 43
-    [               shift and go to state 37
-
-    expression                     shift and go to state 130
-    variable                       shift and go to state 32
-    constant                       shift and go to state 33
-    unary_expr                     shift and go to state 34
-    binary_expr                    shift and go to state 35
-    matrix_init                    shift and go to state 36
 
 state 122
 
-    (50) matrix_init -> ONES ( expression ) .
-
-    ;               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    TRANSP          reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    +               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    -               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    *               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    /               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    >               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    <               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    EQUAL           reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    NOTEQUAL        reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    LESSEQUAL       reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    GREATEREQUAL    reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    DOTADD          reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    DOTSUB          reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    DOTMUL          reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    DOTDIV          reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    ,               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    IF              reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    WHILE           reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    FOR             reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    RETURN          reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    BREAK           reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    CONTINUE        reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    PRINT           reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    ID              reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    $end            reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    }               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    ELSE            reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    )               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    ]               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    :               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-    {               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
-
-
-state 123
-
-    (51) matrix_init -> ONES ( expression , . expression )
+    (49) matrix_init -> ZEROS ( expression , . expression )
     (25) expression -> . variable
     (26) expression -> . constant
     (27) expression -> . unary_expr
@@ -4897,7 +4733,94 @@ state 123
     binary_expr                    shift and go to state 35
     matrix_init                    shift and go to state 36
 
+state 123
+
+    (50) matrix_init -> ONES ( expression ) .
+
+    ;               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    TRANSP          reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    +               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    -               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    *               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    /               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    >               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    <               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    EQUAL           reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    NOTEQUAL        reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    LESSEQUAL       reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    GREATEREQUAL    reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    DOTADD          reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    DOTSUB          reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    DOTMUL          reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    DOTDIV          reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    ,               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    )               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    ]               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    :               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    {               reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    IF              reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    WHILE           reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    FOR             reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    RETURN          reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    BREAK           reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    CONTINUE        reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    PRINT           reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+    ID              reduce using rule 50 (matrix_init -> ONES ( expression ) .)
+
+
 state 124
+
+    (51) matrix_init -> ONES ( expression , . expression )
+    (25) expression -> . variable
+    (26) expression -> . constant
+    (27) expression -> . unary_expr
+    (28) expression -> . binary_expr
+    (29) expression -> . matrix_init
+    (20) variable -> . ID
+    (21) variable -> . ID [ array_ref ]
+    (30) constant -> . INT
+    (31) constant -> . FLOAT
+    (32) unary_expr -> . - expression
+    (33) unary_expr -> . expression TRANSP
+    (34) binary_expr -> . expression + expression
+    (35) binary_expr -> . expression - expression
+    (36) binary_expr -> . expression * expression
+    (37) binary_expr -> . expression / expression
+    (38) binary_expr -> . expression > expression
+    (39) binary_expr -> . expression < expression
+    (40) binary_expr -> . expression EQUAL expression
+    (41) binary_expr -> . expression NOTEQUAL expression
+    (42) binary_expr -> . expression LESSEQUAL expression
+    (43) binary_expr -> . expression GREATEREQUAL expression
+    (44) binary_expr -> . expression DOTADD expression
+    (45) binary_expr -> . expression DOTSUB expression
+    (46) binary_expr -> . expression DOTMUL expression
+    (47) binary_expr -> . expression DOTDIV expression
+    (48) matrix_init -> . ZEROS ( expression )
+    (49) matrix_init -> . ZEROS ( expression , expression )
+    (50) matrix_init -> . ONES ( expression )
+    (51) matrix_init -> . ONES ( expression , expression )
+    (52) matrix_init -> . EYE ( expression )
+    (53) matrix_init -> . [ rows ; row ]
+    (54) matrix_init -> . [ row ]
+
+    ID              shift and go to state 19
+    INT             shift and go to state 38
+    FLOAT           shift and go to state 39
+    -               shift and go to state 40
+    ZEROS           shift and go to state 41
+    ONES            shift and go to state 42
+    EYE             shift and go to state 43
+    [               shift and go to state 37
+
+    expression                     shift and go to state 132
+    variable                       shift and go to state 32
+    constant                       shift and go to state 33
+    unary_expr                     shift and go to state 34
+    binary_expr                    shift and go to state 35
+    matrix_init                    shift and go to state 36
+
+state 125
 
     (52) matrix_init -> EYE ( expression ) .
 
@@ -4918,6 +4841,10 @@ state 124
     DOTMUL          reduce using rule 52 (matrix_init -> EYE ( expression ) .)
     DOTDIV          reduce using rule 52 (matrix_init -> EYE ( expression ) .)
     ,               reduce using rule 52 (matrix_init -> EYE ( expression ) .)
+    )               reduce using rule 52 (matrix_init -> EYE ( expression ) .)
+    ]               reduce using rule 52 (matrix_init -> EYE ( expression ) .)
+    :               reduce using rule 52 (matrix_init -> EYE ( expression ) .)
+    {               reduce using rule 52 (matrix_init -> EYE ( expression ) .)
     IF              reduce using rule 52 (matrix_init -> EYE ( expression ) .)
     WHILE           reduce using rule 52 (matrix_init -> EYE ( expression ) .)
     FOR             reduce using rule 52 (matrix_init -> EYE ( expression ) .)
@@ -4926,28 +4853,21 @@ state 124
     CONTINUE        reduce using rule 52 (matrix_init -> EYE ( expression ) .)
     PRINT           reduce using rule 52 (matrix_init -> EYE ( expression ) .)
     ID              reduce using rule 52 (matrix_init -> EYE ( expression ) .)
-    $end            reduce using rule 52 (matrix_init -> EYE ( expression ) .)
-    }               reduce using rule 52 (matrix_init -> EYE ( expression ) .)
-    ELSE            reduce using rule 52 (matrix_init -> EYE ( expression ) .)
-    )               reduce using rule 52 (matrix_init -> EYE ( expression ) .)
-    ]               reduce using rule 52 (matrix_init -> EYE ( expression ) .)
-    :               reduce using rule 52 (matrix_init -> EYE ( expression ) .)
-    {               reduce using rule 52 (matrix_init -> EYE ( expression ) .)
 
 
-state 125
+state 126
 
     (24) array_ref -> array_ref , array_ref .
     (24) array_ref -> array_ref . , array_ref
 
   ! shift/reduce conflict for , resolved as shift
     ]               reduce using rule 24 (array_ref -> array_ref , array_ref .)
-    ,               shift and go to state 113
+    ,               shift and go to state 114
 
   ! ,               [ reduce using rule 24 (array_ref -> array_ref , array_ref .) ]
 
 
-state 126
+state 127
 
     (68) if_instruction -> IF ( expression ) instructions ELSE . instructions
     (71) else_if_instruction -> ELSE . IF ( expression ) instructions
@@ -4961,7 +4881,7 @@ state 126
     (11) instruction -> . break_instruction
     (12) instruction -> . continue_instruction
     (13) instruction -> . print_instruction
-    (14) assign -> . variable assign_op expression
+    (14) assign -> . variable assign_op expression ;
     (67) if_instruction -> . IF ( expression ) instructions
     (68) if_instruction -> . IF ( expression ) instructions ELSE instructions
     (69) if_instruction -> . IF ( expression ) instructions else_if_instruction
@@ -4975,7 +4895,7 @@ state 126
     (20) variable -> . ID
     (21) variable -> . ID [ array_ref ]
 
-    IF              shift and go to state 132
+    IF              shift and go to state 133
     WHILE           shift and go to state 13
     FOR             shift and go to state 14
     RETURN          shift and go to state 15
@@ -4984,7 +4904,7 @@ state 126
     PRINT           shift and go to state 18
     ID              shift and go to state 19
 
-    instructions                   shift and go to state 133
+    instructions                   shift and go to state 134
     instruction                    shift and go to state 3
     assign                         shift and go to state 4
     if_instruction                 shift and go to state 5
@@ -4995,7 +4915,7 @@ state 126
     print_instruction              shift and go to state 10
     variable                       shift and go to state 11
 
-state 127
+state 128
 
     (69) if_instruction -> IF ( expression ) instructions else_if_instruction .
     (70) if_instruction -> IF ( expression ) instructions else_if_instruction . ELSE instructions
@@ -5012,12 +4932,12 @@ state 127
     $end            reduce using rule 69 (if_instruction -> IF ( expression ) instructions else_if_instruction .)
     ;               reduce using rule 69 (if_instruction -> IF ( expression ) instructions else_if_instruction .)
     }               reduce using rule 69 (if_instruction -> IF ( expression ) instructions else_if_instruction .)
-    ELSE            shift and go to state 134
+    ELSE            shift and go to state 135
 
   ! ELSE            [ reduce using rule 69 (if_instruction -> IF ( expression ) instructions else_if_instruction .) ]
 
 
-state 128
+state 129
 
     (75) range_expression -> ID = expression : expression .
     (33) unary_expr -> expression . TRANSP
@@ -5062,7 +4982,7 @@ state 128
     DOTDIV          shift and go to state 73
 
 
-state 129
+state 130
 
     (53) matrix_init -> [ rows ; row ] .
 
@@ -5083,6 +5003,10 @@ state 129
     DOTMUL          reduce using rule 53 (matrix_init -> [ rows ; row ] .)
     DOTDIV          reduce using rule 53 (matrix_init -> [ rows ; row ] .)
     ,               reduce using rule 53 (matrix_init -> [ rows ; row ] .)
+    )               reduce using rule 53 (matrix_init -> [ rows ; row ] .)
+    ]               reduce using rule 53 (matrix_init -> [ rows ; row ] .)
+    :               reduce using rule 53 (matrix_init -> [ rows ; row ] .)
+    {               reduce using rule 53 (matrix_init -> [ rows ; row ] .)
     IF              reduce using rule 53 (matrix_init -> [ rows ; row ] .)
     WHILE           reduce using rule 53 (matrix_init -> [ rows ; row ] .)
     FOR             reduce using rule 53 (matrix_init -> [ rows ; row ] .)
@@ -5091,55 +5015,11 @@ state 129
     CONTINUE        reduce using rule 53 (matrix_init -> [ rows ; row ] .)
     PRINT           reduce using rule 53 (matrix_init -> [ rows ; row ] .)
     ID              reduce using rule 53 (matrix_init -> [ rows ; row ] .)
-    $end            reduce using rule 53 (matrix_init -> [ rows ; row ] .)
-    }               reduce using rule 53 (matrix_init -> [ rows ; row ] .)
-    ELSE            reduce using rule 53 (matrix_init -> [ rows ; row ] .)
-    )               reduce using rule 53 (matrix_init -> [ rows ; row ] .)
-    ]               reduce using rule 53 (matrix_init -> [ rows ; row ] .)
-    :               reduce using rule 53 (matrix_init -> [ rows ; row ] .)
-    {               reduce using rule 53 (matrix_init -> [ rows ; row ] .)
-
-
-state 130
-
-    (49) matrix_init -> ZEROS ( expression , expression . )
-    (33) unary_expr -> expression . TRANSP
-    (34) binary_expr -> expression . + expression
-    (35) binary_expr -> expression . - expression
-    (36) binary_expr -> expression . * expression
-    (37) binary_expr -> expression . / expression
-    (38) binary_expr -> expression . > expression
-    (39) binary_expr -> expression . < expression
-    (40) binary_expr -> expression . EQUAL expression
-    (41) binary_expr -> expression . NOTEQUAL expression
-    (42) binary_expr -> expression . LESSEQUAL expression
-    (43) binary_expr -> expression . GREATEREQUAL expression
-    (44) binary_expr -> expression . DOTADD expression
-    (45) binary_expr -> expression . DOTSUB expression
-    (46) binary_expr -> expression . DOTMUL expression
-    (47) binary_expr -> expression . DOTDIV expression
-
-    )               shift and go to state 135
-    TRANSP          shift and go to state 59
-    +               shift and go to state 60
-    -               shift and go to state 61
-    *               shift and go to state 62
-    /               shift and go to state 63
-    >               shift and go to state 64
-    <               shift and go to state 65
-    EQUAL           shift and go to state 66
-    NOTEQUAL        shift and go to state 67
-    LESSEQUAL       shift and go to state 68
-    GREATEREQUAL    shift and go to state 69
-    DOTADD          shift and go to state 70
-    DOTSUB          shift and go to state 71
-    DOTMUL          shift and go to state 72
-    DOTDIV          shift and go to state 73
 
 
 state 131
 
-    (51) matrix_init -> ONES ( expression , expression . )
+    (49) matrix_init -> ZEROS ( expression , expression . )
     (33) unary_expr -> expression . TRANSP
     (34) binary_expr -> expression . + expression
     (35) binary_expr -> expression . - expression
@@ -5176,6 +5056,43 @@ state 131
 
 state 132
 
+    (51) matrix_init -> ONES ( expression , expression . )
+    (33) unary_expr -> expression . TRANSP
+    (34) binary_expr -> expression . + expression
+    (35) binary_expr -> expression . - expression
+    (36) binary_expr -> expression . * expression
+    (37) binary_expr -> expression . / expression
+    (38) binary_expr -> expression . > expression
+    (39) binary_expr -> expression . < expression
+    (40) binary_expr -> expression . EQUAL expression
+    (41) binary_expr -> expression . NOTEQUAL expression
+    (42) binary_expr -> expression . LESSEQUAL expression
+    (43) binary_expr -> expression . GREATEREQUAL expression
+    (44) binary_expr -> expression . DOTADD expression
+    (45) binary_expr -> expression . DOTSUB expression
+    (46) binary_expr -> expression . DOTMUL expression
+    (47) binary_expr -> expression . DOTDIV expression
+
+    )               shift and go to state 137
+    TRANSP          shift and go to state 59
+    +               shift and go to state 60
+    -               shift and go to state 61
+    *               shift and go to state 62
+    /               shift and go to state 63
+    >               shift and go to state 64
+    <               shift and go to state 65
+    EQUAL           shift and go to state 66
+    NOTEQUAL        shift and go to state 67
+    LESSEQUAL       shift and go to state 68
+    GREATEREQUAL    shift and go to state 69
+    DOTADD          shift and go to state 70
+    DOTSUB          shift and go to state 71
+    DOTMUL          shift and go to state 72
+    DOTDIV          shift and go to state 73
+
+
+state 133
+
     (71) else_if_instruction -> ELSE IF . ( expression ) instructions
     (72) else_if_instruction -> ELSE IF . ( expression ) instructions else_if_instruction
     (67) if_instruction -> IF . ( expression ) instructions
@@ -5183,10 +5100,10 @@ state 132
     (69) if_instruction -> IF . ( expression ) instructions else_if_instruction
     (70) if_instruction -> IF . ( expression ) instructions else_if_instruction ELSE instructions
 
-    (               shift and go to state 137
+    (               shift and go to state 138
 
 
-state 133
+state 134
 
     (68) if_instruction -> IF ( expression ) instructions ELSE instructions .
     (2) instructions -> instructions . instruction
@@ -5197,7 +5114,7 @@ state 133
     (11) instruction -> . break_instruction
     (12) instruction -> . continue_instruction
     (13) instruction -> . print_instruction
-    (14) assign -> . variable assign_op expression
+    (14) assign -> . variable assign_op expression ;
     (67) if_instruction -> . IF ( expression ) instructions
     (68) if_instruction -> . IF ( expression ) instructions ELSE instructions
     (69) if_instruction -> . IF ( expression ) instructions else_if_instruction
@@ -5243,7 +5160,7 @@ state 133
     print_instruction              shift and go to state 10
     variable                       shift and go to state 11
 
-state 134
+state 135
 
     (70) if_instruction -> IF ( expression ) instructions else_if_instruction ELSE . instructions
     (2) instructions -> . instructions instruction
@@ -5255,7 +5172,7 @@ state 134
     (11) instruction -> . break_instruction
     (12) instruction -> . continue_instruction
     (13) instruction -> . print_instruction
-    (14) assign -> . variable assign_op expression
+    (14) assign -> . variable assign_op expression ;
     (67) if_instruction -> . IF ( expression ) instructions
     (68) if_instruction -> . IF ( expression ) instructions ELSE instructions
     (69) if_instruction -> . IF ( expression ) instructions else_if_instruction
@@ -5278,7 +5195,7 @@ state 134
     PRINT           shift and go to state 18
     ID              shift and go to state 19
 
-    instructions                   shift and go to state 138
+    instructions                   shift and go to state 139
     instruction                    shift and go to state 3
     assign                         shift and go to state 4
     if_instruction                 shift and go to state 5
@@ -5289,7 +5206,7 @@ state 134
     print_instruction              shift and go to state 10
     variable                       shift and go to state 11
 
-state 135
+state 136
 
     (49) matrix_init -> ZEROS ( expression , expression ) .
 
@@ -5310,6 +5227,10 @@ state 135
     DOTMUL          reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
     DOTDIV          reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
     ,               reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
+    )               reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
+    ]               reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
+    :               reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
+    {               reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
     IF              reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
     WHILE           reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
     FOR             reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
@@ -5318,16 +5239,9 @@ state 135
     CONTINUE        reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
     PRINT           reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
     ID              reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
-    $end            reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
-    }               reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
-    ELSE            reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
-    )               reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
-    ]               reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
-    :               reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
-    {               reduce using rule 49 (matrix_init -> ZEROS ( expression , expression ) .)
 
 
-state 136
+state 137
 
     (51) matrix_init -> ONES ( expression , expression ) .
 
@@ -5348,6 +5262,10 @@ state 136
     DOTMUL          reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
     DOTDIV          reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
     ,               reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
+    )               reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
+    ]               reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
+    :               reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
+    {               reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
     IF              reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
     WHILE           reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
     FOR             reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
@@ -5356,16 +5274,9 @@ state 136
     CONTINUE        reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
     PRINT           reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
     ID              reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
-    $end            reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
-    }               reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
-    ELSE            reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
-    )               reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
-    ]               reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
-    :               reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
-    {               reduce using rule 51 (matrix_init -> ONES ( expression , expression ) .)
 
 
-state 137
+state 138
 
     (71) else_if_instruction -> ELSE IF ( . expression ) instructions
     (72) else_if_instruction -> ELSE IF ( . expression ) instructions else_if_instruction
@@ -5415,14 +5326,14 @@ state 137
     EYE             shift and go to state 43
     [               shift and go to state 37
 
-    expression                     shift and go to state 139
+    expression                     shift and go to state 140
     variable                       shift and go to state 32
     constant                       shift and go to state 33
     unary_expr                     shift and go to state 34
     binary_expr                    shift and go to state 35
     matrix_init                    shift and go to state 36
 
-state 138
+state 139
 
     (70) if_instruction -> IF ( expression ) instructions else_if_instruction ELSE instructions .
     (2) instructions -> instructions . instruction
@@ -5433,7 +5344,7 @@ state 138
     (11) instruction -> . break_instruction
     (12) instruction -> . continue_instruction
     (13) instruction -> . print_instruction
-    (14) assign -> . variable assign_op expression
+    (14) assign -> . variable assign_op expression ;
     (67) if_instruction -> . IF ( expression ) instructions
     (68) if_instruction -> . IF ( expression ) instructions ELSE instructions
     (69) if_instruction -> . IF ( expression ) instructions else_if_instruction
@@ -5479,7 +5390,7 @@ state 138
     print_instruction              shift and go to state 10
     variable                       shift and go to state 11
 
-state 139
+state 140
 
     (71) else_if_instruction -> ELSE IF ( expression . ) instructions
     (72) else_if_instruction -> ELSE IF ( expression . ) instructions else_if_instruction
@@ -5503,7 +5414,7 @@ state 139
     (46) binary_expr -> expression . DOTMUL expression
     (47) binary_expr -> expression . DOTDIV expression
 
-    )               shift and go to state 140
+    )               shift and go to state 141
     TRANSP          shift and go to state 59
     +               shift and go to state 60
     -               shift and go to state 61
@@ -5521,7 +5432,7 @@ state 139
     DOTDIV          shift and go to state 73
 
 
-state 140
+state 141
 
     (71) else_if_instruction -> ELSE IF ( expression ) . instructions
     (72) else_if_instruction -> ELSE IF ( expression ) . instructions else_if_instruction
@@ -5538,7 +5449,7 @@ state 140
     (11) instruction -> . break_instruction
     (12) instruction -> . continue_instruction
     (13) instruction -> . print_instruction
-    (14) assign -> . variable assign_op expression
+    (14) assign -> . variable assign_op expression ;
     (67) if_instruction -> . IF ( expression ) instructions
     (68) if_instruction -> . IF ( expression ) instructions ELSE instructions
     (69) if_instruction -> . IF ( expression ) instructions else_if_instruction
@@ -5561,7 +5472,7 @@ state 140
     PRINT           shift and go to state 18
     ID              shift and go to state 19
 
-    instructions                   shift and go to state 141
+    instructions                   shift and go to state 142
     instruction                    shift and go to state 3
     assign                         shift and go to state 4
     if_instruction                 shift and go to state 5
@@ -5572,7 +5483,7 @@ state 140
     print_instruction              shift and go to state 10
     variable                       shift and go to state 11
 
-state 141
+state 142
 
     (71) else_if_instruction -> ELSE IF ( expression ) instructions .
     (72) else_if_instruction -> ELSE IF ( expression ) instructions . else_if_instruction
@@ -5590,7 +5501,7 @@ state 141
     (11) instruction -> . break_instruction
     (12) instruction -> . continue_instruction
     (13) instruction -> . print_instruction
-    (14) assign -> . variable assign_op expression
+    (14) assign -> . variable assign_op expression ;
     (67) if_instruction -> . IF ( expression ) instructions
     (68) if_instruction -> . IF ( expression ) instructions ELSE instructions
     (69) if_instruction -> . IF ( expression ) instructions else_if_instruction
@@ -5628,7 +5539,7 @@ state 141
     $end            reduce using rule 67 (if_instruction -> IF ( expression ) instructions .)
     ;               reduce using rule 67 (if_instruction -> IF ( expression ) instructions .)
     }               reduce using rule 67 (if_instruction -> IF ( expression ) instructions .)
-    ELSE            shift and go to state 126
+    ELSE            shift and go to state 127
     IF              shift and go to state 12
     WHILE           shift and go to state 13
     FOR             shift and go to state 14
@@ -5660,7 +5571,7 @@ state 141
   ! PRINT           [ reduce using rule 67 (if_instruction -> IF ( expression ) instructions .) ]
   ! ID              [ reduce using rule 67 (if_instruction -> IF ( expression ) instructions .) ]
 
-    else_if_instruction            shift and go to state 142
+    else_if_instruction            shift and go to state 143
     instruction                    shift and go to state 20
     assign                         shift and go to state 4
     if_instruction                 shift and go to state 5
@@ -5671,7 +5582,7 @@ state 141
     print_instruction              shift and go to state 10
     variable                       shift and go to state 11
 
-state 142
+state 143
 
     (72) else_if_instruction -> ELSE IF ( expression ) instructions else_if_instruction .
     (69) if_instruction -> IF ( expression ) instructions else_if_instruction .
@@ -5701,7 +5612,7 @@ state 142
     $end            reduce using rule 69 (if_instruction -> IF ( expression ) instructions else_if_instruction .)
     ;               reduce using rule 69 (if_instruction -> IF ( expression ) instructions else_if_instruction .)
     }               reduce using rule 69 (if_instruction -> IF ( expression ) instructions else_if_instruction .)
-    ELSE            shift and go to state 134
+    ELSE            shift and go to state 135
 
   ! ELSE            [ reduce using rule 72 (else_if_instruction -> ELSE IF ( expression ) instructions else_if_instruction .) ]
   ! IF              [ reduce using rule 72 (else_if_instruction -> ELSE IF ( expression ) instructions else_if_instruction .) ]
@@ -5720,33 +5631,33 @@ state 142
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for ELSE in state 114 resolved as shift
-WARNING: shift/reduce conflict for IF in state 114 resolved as shift
-WARNING: shift/reduce conflict for WHILE in state 114 resolved as shift
-WARNING: shift/reduce conflict for FOR in state 114 resolved as shift
-WARNING: shift/reduce conflict for RETURN in state 114 resolved as shift
-WARNING: shift/reduce conflict for BREAK in state 114 resolved as shift
-WARNING: shift/reduce conflict for CONTINUE in state 114 resolved as shift
-WARNING: shift/reduce conflict for PRINT in state 114 resolved as shift
-WARNING: shift/reduce conflict for ID in state 114 resolved as shift
-WARNING: shift/reduce conflict for , in state 125 resolved as shift
-WARNING: shift/reduce conflict for ELSE in state 127 resolved as shift
-WARNING: shift/reduce conflict for ELSE in state 141 resolved as shift
-WARNING: shift/reduce conflict for IF in state 141 resolved as shift
-WARNING: shift/reduce conflict for WHILE in state 141 resolved as shift
-WARNING: shift/reduce conflict for FOR in state 141 resolved as shift
-WARNING: shift/reduce conflict for RETURN in state 141 resolved as shift
-WARNING: shift/reduce conflict for BREAK in state 141 resolved as shift
-WARNING: shift/reduce conflict for CONTINUE in state 141 resolved as shift
-WARNING: shift/reduce conflict for PRINT in state 141 resolved as shift
-WARNING: shift/reduce conflict for ID in state 141 resolved as shift
+WARNING: shift/reduce conflict for ELSE in state 115 resolved as shift
+WARNING: shift/reduce conflict for IF in state 115 resolved as shift
+WARNING: shift/reduce conflict for WHILE in state 115 resolved as shift
+WARNING: shift/reduce conflict for FOR in state 115 resolved as shift
+WARNING: shift/reduce conflict for RETURN in state 115 resolved as shift
+WARNING: shift/reduce conflict for BREAK in state 115 resolved as shift
+WARNING: shift/reduce conflict for CONTINUE in state 115 resolved as shift
+WARNING: shift/reduce conflict for PRINT in state 115 resolved as shift
+WARNING: shift/reduce conflict for ID in state 115 resolved as shift
+WARNING: shift/reduce conflict for , in state 126 resolved as shift
+WARNING: shift/reduce conflict for ELSE in state 128 resolved as shift
 WARNING: shift/reduce conflict for ELSE in state 142 resolved as shift
+WARNING: shift/reduce conflict for IF in state 142 resolved as shift
+WARNING: shift/reduce conflict for WHILE in state 142 resolved as shift
+WARNING: shift/reduce conflict for FOR in state 142 resolved as shift
+WARNING: shift/reduce conflict for RETURN in state 142 resolved as shift
+WARNING: shift/reduce conflict for BREAK in state 142 resolved as shift
+WARNING: shift/reduce conflict for CONTINUE in state 142 resolved as shift
+WARNING: shift/reduce conflict for PRINT in state 142 resolved as shift
+WARNING: shift/reduce conflict for ID in state 142 resolved as shift
+WARNING: shift/reduce conflict for ELSE in state 143 resolved as shift
 WARNING: reduce/reduce conflict in state 83 resolved using rule (variable -> ID)
 WARNING: rejected rule (array_ref -> ID) in state 83
-WARNING: reduce/reduce conflict in state 141 resolved using rule (if_instruction -> IF ( expression ) instructions)
-WARNING: rejected rule (else_if_instruction -> ELSE IF ( expression ) instructions) in state 141
-WARNING: reduce/reduce conflict in state 142 resolved using rule (if_instruction -> IF ( expression ) instructions else_if_instruction)
-WARNING: rejected rule (else_if_instruction -> ELSE IF ( expression ) instructions else_if_instruction) in state 142
+WARNING: reduce/reduce conflict in state 142 resolved using rule (if_instruction -> IF ( expression ) instructions)
+WARNING: rejected rule (else_if_instruction -> ELSE IF ( expression ) instructions) in state 142
+WARNING: reduce/reduce conflict in state 143 resolved using rule (if_instruction -> IF ( expression ) instructions else_if_instruction)
+WARNING: rejected rule (else_if_instruction -> ELSE IF ( expression ) instructions else_if_instruction) in state 143
 WARNING: Rule (array_ref -> ID) is never reduced
 WARNING: Rule (else_if_instruction -> ELSE IF ( expression ) instructions) is never reduced
 WARNING: Rule (else_if_instruction -> ELSE IF ( expression ) instructions else_if_instruction) is never reduced
