@@ -14,6 +14,7 @@ precedence = (
     ("left", "*", "/"),
     ("left", "DOTADD", "DOTSUB"),
     ("left", "DOTMUL", "DOTDIV")
+    # unary minus
 )
 
 
@@ -38,11 +39,6 @@ def p_instructions(p):
         p[0] = entities.Instructions(p[1], None)
     else:
         p[0] = entities.Instructions(p[1], p[2])
-
-
-def p_eol_instruction(p):
-    """eol_instruction : instruction ';'"""
-    p[0] = entities.Instructions(None, p[1])
 
 
 def p_braced_instructions(p):
@@ -93,12 +89,14 @@ def p_variable(p):
 
 
 def p_array_ref(p):
-    """array_ref : ID
-                 | expression
-                 | array_ref ',' array_ref
+    """array_ref : expression
+                 | array_ref ',' expression
+                 | expression ':' expression
     """
-    if len(p) > 2:
+    if p[1] == "array_ref":
         p[0] = entities.MatrixIndexes(p[1], p[3])
+    elif len(p) > 2:
+        p[0] = entities.RangeExpression(None, p[1], p[3])
     else:
         p[0] = entities.MatrixIndexes(None, p[1])
 
