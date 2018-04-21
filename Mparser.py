@@ -13,7 +13,8 @@ precedence = (
     ("left", '+', '-'),
     ("left", "*", "/"),
     ("left", "DOTADD", "DOTSUB"),
-    ("left", "DOTMUL", "DOTDIV")
+    ("left", "DOTMUL", "DOTDIV"),
+    ("left", 'TRANSP')
 )
 
 
@@ -35,14 +36,9 @@ def p_instructions(p):
                     | instruction
     """
     if len(p) == 2:
-        p[0] = entities.Instructions(p[1], None)
+        p[0] = p[1]
     else:
         p[0] = entities.Instructions(p[1], p[2])
-
-
-def p_eol_instruction(p):
-    """eol_instruction : instruction ';'"""
-    p[0] = entities.Instructions(None, p[1])
 
 
 def p_braced_instructions(p):
@@ -100,7 +96,7 @@ def p_array_ref(p):
     if len(p) > 2:
         p[0] = entities.MatrixIndexes(p[1], p[3])
     else:
-        p[0] = entities.MatrixIndexes(None, p[1])
+        p[0] = p[1]
 
 
 def p_expression(p):
@@ -127,7 +123,7 @@ def p_unary_expr(p):
     if p[1] == '-':
         p[0] = entities.UnaryExpr(p[1], p[2])
     else:
-        p[1] = entities.UnaryExpr(p[2], p[1])
+        p[0] = entities.UnaryExpr(p[2], p[1])
 
 
 def p_binary_expr(p):
@@ -155,20 +151,20 @@ def p_matrix_init(p):
                    | ONES '(' expression ')'
                    | ONES '(' expression ',' expression ')'
                    | EYE '(' expression ')'
-                   | '[' rows ';' row ']'
-                   | '[' row ']'
+                   | '[' rows ';' rows ']'
+                   | '[' rows ']'
     """
-    if p[1] == "ZEROS":
+    if p[1] == "zeros":
         if len(p) < 7:
             p[0] = entities.ZerosMatrixInit(p[3], None)
         else:
             p[0] = entities.ZerosMatrixInit(p[3], p[5])
-    elif p[1] == "ONES":
+    elif p[1] == "ones":
         if len(p) < 7:
             p[0] = entities.OnesMatrixInit(p[3], None)
         else:
             p[0] = entities.OnesMatrixInit(p[3], p[5])
-    elif p[1] == "EYE":
+    elif p[1] == "eye":
         p[0] = entities.EyeMatrixInit(p[3])
     else:
         if len(p) > 4:
@@ -178,13 +174,13 @@ def p_matrix_init(p):
 
 
 def p_rows(p):
-    """rows : rows ';' row
+    """rows : row ';' rows
             | row
     """
     if len(p) > 2:
-        p[0] = entities.MatrixInit(p[1], p[3])
+        p[0] = entities.MatrixVector(p[1], p[3])
     else:
-        p[0] = entities.MatrixInit(None, p[1])
+        p[0] = entities.MatrixVector(None, p[1])
 
 
 def p_row(p):
@@ -192,9 +188,9 @@ def p_row(p):
            | expression
     """
     if len(p) > 2:
-        p[0] = entities.MatrixInit(p[1], p[3])
+        p[0] = entities.MatrixRow(p[1], p[3])
     else:
-        p[0] = entities.MatrixInit(None, p[1])
+        p[0] = entities.MatrixRow(None, p[1])
 
 
 def p_break_instruction(p):
