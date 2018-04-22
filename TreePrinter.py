@@ -183,10 +183,16 @@ class TreePrinter:
 
     @addToClass(entities.StringExpressions)
     def printTree(self, indent=0):
-        if issubclass(self.string.__class__, entities.Node):
-            res = self.string.printTree(indent)
+        res = ""
+
+        if self.string_expressions is not None:
+            res += self.string_expressions.printTree(indent)
+
+        if issubclass(self.string_expression.__class__, entities.Node):
+            res += self.string_expression.printTree(indent)
         else:
-            res = indent * indent_symbol + str(self.string) + '\n'
+            res += indent * indent_symbol + str(self.string_expression) + '\n'
+
         return res
 
     @addToClass(entities.IfInstruction)
@@ -215,11 +221,17 @@ class TreePrinter:
     @addToClass(entities.ForInstruction)
     def printTree(self, indent=0):
         res = indent * indent_symbol + "FOR\n"
+
         if issubclass(self.range_expression.__class__, entities.Node):
             self.range_expression.printTree(indent + 1)
         else:
             res += indent_symbol * (indent + 1) + str(self.range_expression) + '\n'
-        res += self.braced_expression.printTree(indent)
+
+        if issubclass(self.braced_expression.__class__, entities.Node):
+            self.braced_expression.printTree(indent)
+        else:
+            res += indent_symbol * indent + str(self.braced_expression) + '\n'
+
         return res
 
     @addToClass(entities.RangeExpression)
