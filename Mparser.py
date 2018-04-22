@@ -15,7 +15,6 @@ precedence = (
     ("left", "DOTADD", "DOTSUB"),
     ("left", "DOTMUL", "DOTDIV"),
     ("left", 'TRANSP')
-    # unary minus
 )
 
 

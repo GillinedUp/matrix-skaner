@@ -30,17 +30,6 @@ class TreePrinter:
         res += self.instruction.printTree(indent)
         return res
 
-    @addToClass(entities.Instructions)
-    def printTree(self, indent=0):
-        res = ""
-        if issubclass(self.instructions.__class__, entities.Node):
-            res += self.instructions.printTree(indent)
-        else:
-            res += indent_symbol * indent + str(self.instructions) + '\n'
-
-        res += self.instruction.printTree(indent)
-        return res
-
     @addToClass(entities.BracedInstructions)
     def printTree(self, indent=0):
         res = indent_symbol * indent
@@ -109,7 +98,6 @@ class TreePrinter:
             res += self.rows.printTree(indent + 1)
         else:
             res += indent_symbol * (indent + 1) + str(self.rows) + '\n'
-
         if self.columns is not None:
             if issubclass(self.columns.__class__, entities.Node):
                 res += self.columns.printTree(indent + 1)
@@ -146,7 +134,6 @@ class TreePrinter:
         res = indent_symbol * indent + 'MATRIX\n'
         if self.rows is not None:
             res += self.rows.printTree(indent + 1)
-
         res += self.row.printTree(indent + 1)
         return res
 
@@ -155,12 +142,10 @@ class TreePrinter:
         res = ""
         if self.rows is not None:
             res += self.rows.printTree(indent)
-
         if issubclass(self.row.__class__, entities.Node):
             res += self.row.printTree(indent + 1)
         else:
             res += indent_symbol * (indent + 1) + str(self.row) + '\n'
-
         return res
 
     @addToClass(entities.MatrixVector)
@@ -168,10 +153,58 @@ class TreePrinter:
         res = indent_symbol * indent + 'VECTOR\n'
         if self.rows is not None:
             res += self.rows.printTree(indent)
-
         res += self.row.printTree(indent)
         return res
 
+    @addToClass(entities.ReturnInstruction)
+    def printTree(self, indent=0):
+        res = indent * indent_symbol + "RETURN\n"
+        res += self.expression.printTree(indent + 1)
+        return res
+
+    @addToClass(entities.StringExpressions)
+    def printTree(self, indent=0):
+        if issubclass(self.string.__class__, entities.Node):
+            res = self.string.printTree(indent)
+        else:
+            res = indent * indent_symbol + str(self.string) + '\n'
+        return res
+
+    @addToClass(entities.IfInstruction)
+    def printTree(self, indent=0):
+        res = indent * indent_symbol + "IF\n"
+        res += self.expression.printTree(indent + 1)
+        res += indent * indent_symbol + "THEN\n"
+        res += self.instructions.printTree(indent + 1)
+        if self.else_if_instructions is not None:
+            res += indent * indent_symbol + "ELSE\n"
+            res += self.else_if_instructions.printTree(indent + 1)
+        if self.else_instructions is not None:
+            res += indent * indent_symbol + "ELSE\n"
+            res += self.else_instructions.printTree(indent + 1)
+        return res
+
+    @addToClass(entities.WhileInstruction)
+    def printTree(self, indent=0):
+        res = indent * indent_symbol + "WHILE\n"
+        res += self.expression.printTree(indent + 1)
+        res += self.braced_expression.printTree(indent)
+        return res
+
+    @addToClass(entities.ForInstruction)
+    def printTree(self, indent=0):
+        res = indent * indent_symbol + "FOR\n"
+        res += self.range_expression.printTree(indent + 1)
+        res += self.braced_expression.printTree(indent)
+        return res
+
+    @addToClass(entities.RangeExpression)
+    def printTree(self, indent=0):
+        res = self.my_id.printTree(indent)
+        res += indent * indent_symbol + "RANGE\n"
+        res += self.expression1.printTree(indent + 1)
+        res += self.expression2.printTree(indent + 1)
+        return res
 
     @addToClass(entities.Error)
     def printTree(self, indent=0):
