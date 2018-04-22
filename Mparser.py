@@ -238,23 +238,23 @@ def p_if_instruction(p):
                       | IF '(' expression ')' instructions else_if_instruction ELSE instructions
     """
     if len(p) >= 9:
-        p[0] = entities.IfInstruction(p[3], p[5], p[6], p[7])
+        p[0] = entities.IfInstruction(p[3], p[5], p[6], p[8])
+    elif len(p) == 8:
+        p[0] = entities.IfInstruction(p[3], p[5], p[7], None)
     elif len(p) == 7:
         p[0] = entities.IfInstruction(p[3], p[5], p[6], None)
-    elif len(p) == 5:
-        p[0] = entities.IfInstruction(p[3], p[5], None, None)
     else:
-        p[0] = entities.IfInstruction(p[3], None, None, None)
+        p[0] = entities.IfInstruction(p[3], p[5], None, None)
 
 
 def p_else_if_instruction(p):
     """else_if_instruction : ELSE IF '(' expression ')' instructions
                            | ELSE IF '(' expression ')' instructions else_if_instruction
     """
-    if len(p) >= 7:
-        p[0] = entities.IfInstruction(p[3], p[5], p[6], None)
+    if len(p) >= 8:
+        p[0] = entities.IfInstruction(p[4], p[6], p[7], None)
     else:
-        p[0] = entities.IfInstruction(p[3], p[5], None, None)
+        p[0] = entities.IfInstruction(p[4], p[6], None, None)
 
 
 def p_iteration_instruction(p):
