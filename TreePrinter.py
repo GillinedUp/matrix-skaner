@@ -54,26 +54,33 @@ class TreePrinter:
     @addToClass(entities.ArrayRef)
     def printTree(self, indent=0):
         res = indent_symbol * indent + 'REF\n'
-        res += indent_symbol * (indent + 1) + self.matrix_name + '\n'
-        res += self.index.printTree(indent + 1)
+        if issubclass(self.matrix_name.__class__, entities.Node):
+            res += self.matrix_name.printTree(indent + 1)
+        else:
+            res += indent_symbol * (indent + 1) + self.matrix_name + '\n'
+
+        if issubclass(self.index.__class__, entities.Node):
+            res += self.index.printTree(indent + 1)
+        else:
+            res += indent_symbol * (indent + 1) + str(self.index) + '\n'
+
         return res
 
-    # TODO chyba trzeba poprawić
     @addToClass(entities.MatrixIndexes)
     def printTree(self, indent=0):
         res = ""
-        if self.dim_index is not None:
-            if issubclass(self.dim_index.__class__, entities.Node):
-                res += indent_symbol * indent + self.dim_index.printTree(indent)
-            else:
-                res += indent_symbol * indent + str(self.dim_index) + '\n'
+        if issubclass(self.dim_index.__class__, entities.Node):
+            res += self.dim_index.printTree(indent)
+        else:
+            res += indent_symbol * indent + str(self.dim_index) + '\n'
 
-        if self.index is not None:
-            if issubclass(self.index.__class__, entities.Node):
-                res += indent_symbol * indent + self.index.printTree(indent)
-            else:
-                res += indent_symbol * indent + str(self.index) + '\n'
+        if issubclass(self.index.__class__, entities.Node):
+            res += self.index.printTree(indent)
+        else:
+            res += indent_symbol * indent + str(self.index) + '\n'
+
         return res
+
 
     @addToClass(entities.UnaryExpr)
     def printTree(self, indent=0):
@@ -237,16 +244,17 @@ class TreePrinter:
     @addToClass(entities.RangeExpression)
     def printTree(self, indent=0):
         res = ""
-        if issubclass(self.my_id.__class__, entities.Node):
-            res = self.my_id.printTree(indent)
-        else:
-            res += indent_symbol * indent + str(self.my_id) + '\n'
+        if self.my_id is not None:
+            if issubclass(self.my_id.__class__, entities.Node):
+                res = self.my_id.printTree(indent)
+            else:
+                res += indent_symbol * indent + str(self.my_id) + '\n'
         res += indent * indent_symbol + "RANGE\n"
 
         if issubclass(self.expression1.__class__, entities.Node):
             res = self.expression1.printTree(indent + 1)
         else:
-            res += indent_symbol * (indent + 1) + str(self.expression2) + '\n'
+            res += indent_symbol * (indent + 1) + str(self.expression1) + '\n'
 
         if issubclass(self.expression2.__class__, entities.Node):
             res = self.expression2.printTree(indent)

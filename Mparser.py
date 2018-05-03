@@ -93,10 +93,10 @@ def p_array_ref(p):
                  | array_ref ',' expression
                  | expression ':' expression
     """
-    if p[1] == "array_ref":
-        p[0] = entities.MatrixIndexes(p[1], p[3])
-    elif len(p) > 2:
+    if len(p) > 2 and p[2] == ":":
         p[0] = entities.RangeExpression(None, p[1], p[3])
+    elif len(p) > 2:
+        p[0] = entities.MatrixIndexes(p[1], p[3])
     else:
         p[0] = p[1]
 
