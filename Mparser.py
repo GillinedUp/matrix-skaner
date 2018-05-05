@@ -232,10 +232,10 @@ def p_string_expression(p):
 
 
 def p_if_instruction(p):
-    """if_instruction : IF '(' expression ')' instructions
-                      | IF '(' expression ')' instructions ELSE instructions
-                      | IF '(' expression ')' instructions else_if_instruction
-                      | IF '(' expression ')' instructions else_if_instruction ELSE instructions
+    """if_instruction : IF '(' expression ')' instruction
+                      | IF '(' expression ')' instruction ELSE instruction
+                      | IF '(' expression ')' instruction else_if_instruction
+                      | IF '(' expression ')' instruction else_if_instruction ELSE instruction
     """
     if len(p) >= 9:
         p[0] = entities.IfInstruction(p[3], p[5], p[6], p[8])
@@ -248,8 +248,8 @@ def p_if_instruction(p):
 
 
 def p_else_if_instruction(p):
-    """else_if_instruction : ELSE IF '(' expression ')' instructions
-                           | ELSE IF '(' expression ')' instructions else_if_instruction
+    """else_if_instruction : ELSE IF '(' expression ')' instruction
+                           | ELSE IF '(' expression ')' instruction else_if_instruction
     """
     if len(p) >= 8:
         p[0] = entities.IfInstruction(p[4], p[6], p[7], None)
