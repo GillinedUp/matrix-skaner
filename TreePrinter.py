@@ -32,8 +32,8 @@ class TreePrinter:
 
     @addToClass(entities.BracedInstructions)
     def printTree(self, indent=0):
-        res = indent_symbol * indent
-        res += self.instructions.printTree(indent)
+        # res = indent_symbol * indent
+        res = self.instructions.printTree(indent)
         return res
 
     @addToClass(entities.Assign)
@@ -183,7 +183,7 @@ class TreePrinter:
 
     @addToClass(entities.LoopControlInstruction)
     def printTree(self, indent=0):
-        res = self.loop_control + "\n"
+        res = indent_symbol * indent + self.loop_control.upper() + "\n"
         return res
 
     @addToClass(entities.ReturnInstruction)
@@ -245,9 +245,9 @@ class TreePrinter:
             res += indent_symbol * (indent + 1) + str(self.range_expression) + '\n'
 
         if issubclass(self.braced_expression.__class__, entities.Node):
-            res += self.braced_expression.printTree(indent)
+            res += self.braced_expression.printTree(indent + 1)
         else:
-            res += indent_symbol * indent + str(self.braced_expression) + '\n'
+            res += indent_symbol * (indent + 1) + str(self.braced_expression) + '\n'
 
         return res
 
