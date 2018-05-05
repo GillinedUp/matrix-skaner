@@ -261,7 +261,7 @@ def p_iteration_instruction(p):
     """iteration_instruction : WHILE '(' expression ')' braced_instructions
                              | FOR range_expression braced_instructions
     """
-    if p[1] == "WHILE":
+    if p[1] == "while":
         p[0] = entities.WhileInstruction(p[3], p[5])
     else:
         p[0] = entities.ForInstruction(p[2], p[3])

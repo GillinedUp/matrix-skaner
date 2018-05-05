@@ -232,7 +232,7 @@ class TreePrinter:
     def printTree(self, indent=0):
         res = indent * indent_symbol + "WHILE\n"
         res += self.expression.printTree(indent + 1)
-        res += self.braced_expression.printTree(indent)
+        res += self.braced_expression.printTree(indent + 1)
         return res
 
     @addToClass(entities.ForInstruction)
