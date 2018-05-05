@@ -188,6 +188,12 @@ class TreePrinter:
         res += self.expression.printTree(indent + 1)
         return res
 
+    @addToClass(entities.PrintInstruction)
+    def printTree(self, indent=0):
+        res = indent * indent_symbol + "PRINT\n"
+        res += self.string_expressions.printTree(indent + 1)
+        return res
+
     @addToClass(entities.StringExpressions)
     def printTree(self, indent=0):
         res = ""
