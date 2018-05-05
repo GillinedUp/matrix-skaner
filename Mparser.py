@@ -197,12 +197,12 @@ def p_row(p):
 
 def p_break_instruction(p):
     """break_instruction : BREAK ';'"""
-    p[0] = p[1]
+    p[0] = entities.LoopControlInstruction(p[1])
 
 
 def p_continue_instruction(p):
     """continue_instruction : CONTINUE ';'"""
-    p[0] = p[1]
+    p[0] = entities.LoopControlInstruction(p[1])
 
 
 def p_return_instruction(p):
@@ -264,7 +264,7 @@ def p_iteration_instruction(p):
     if p[1] == "WHILE":
         p[0] = entities.WhileInstruction(p[3], p[5])
     else:
-        p[0] = entities.ForInstruction(p[1], p[2])
+        p[0] = entities.ForInstruction(p[2], p[3])
 
 
 def p_range_expression(p):

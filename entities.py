@@ -87,6 +87,11 @@ class MatrixVector(Node):
         self.row = row
 
 
+class LoopControlInstruction(Node):
+    def __init__(self, loop_control):
+        self.loop_control = loop_control
+
+
 class ReturnInstruction(Node):
     def __init__(self, expression):
         self.expression = expression
