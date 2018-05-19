@@ -27,6 +27,7 @@ import sys
 import Mparser
 from scanner import lexer
 from TreePrinter import TreePrinter
+from TypeChecker import TypeChecker
 
 
 if __name__ == '__main__':
@@ -43,4 +44,6 @@ if __name__ == '__main__':
     lexer.input(text)
     ast = parser.parse(text, lexer=lexer)
     print(ast.printTree())
-
+    typeChecker = TypeChecker()
+    typeChecker.visit(ast)   # or alternatively ast.accept(typeChecker)
+    print('Checked')

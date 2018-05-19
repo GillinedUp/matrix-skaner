@@ -24,21 +24,12 @@ class TreePrinter:
         res = ""
         if issubclass(self.instructions.__class__, entities.Node):
             res += self.instructions.printTree(indent)
+        elif issubclass(self.instructions.__class__, list):
+            for el in self.instructions:
+                res += indent_symbol * indent + el.printTree(indent)
         else:
             res += indent_symbol * indent + str(self.instructions) + '\n'
 
-        res += self.instruction.printTree(indent)
-        return res
-
-    @addToClass(entities.Instructions)
-    def printTree(self, indent=0):
-        res = ""
-        if issubclass(self.instructions.__class__, entities.Node):
-            res += self.instructions.printTree(indent)
-        else:
-            res += indent_symbol * indent + str(self.instructions) + '\n'
-
-        res += self.instruction.printTree(indent)
         return res
 
     @addToClass(entities.BracedInstructions)
@@ -65,25 +56,39 @@ class TreePrinter:
     @addToClass(entities.ArrayRef)
     def printTree(self, indent=0):
         res = indent_symbol * indent + 'REF\n'
-        res += indent_symbol * (indent + 1) + self.matrix_name + '\n'
+        if issubclass(self.matrix_name.__class__, entities.Node):
+            res += self.matrix_name.printTree(indent + 1)
+        else:
+            res += indent_symbol * (indent + 1) + self.matrix_name + '\n'
+
         res += self.index.printTree(indent + 1)
+
         return res
 
     # TODO chyba trzeba poprawić
+    @addToClass(entities.MatrixExactIndexes)
+    def printTree(self, indent=0):
+        res = ""
+        if issubclass(self.dim_index.__class__, entities.Node):
+            res += self.dim_index.printTree(indent)
+        else:
+            res += indent_symbol * indent + str(self.dim_index) + '\n'
+
+        if issubclass(self.index.__class__, entities.Node):
+            res += self.index.printTree(indent)
+        else:
+            res += indent_symbol * indent + str(self.index) + '\n'
+
+        return res
+
     @addToClass(entities.MatrixIndexes)
     def printTree(self, indent=0):
         res = ""
-        if self.dim_index is not None:
-            if issubclass(self.dim_index.__class__, entities.Node):
-                res += indent_symbol * indent + self.dim_index.printTree(indent)
-            else:
-                res += indent_symbol * indent + str(self.dim_index) + '\n'
+        if issubclass(self.index.__class__, entities.Node):
+            res += self.index.printTree(indent)
+        else:
+            res += indent_symbol * indent + str(self.index) + '\n'
 
-        if self.index is not None:
-            if issubclass(self.index.__class__, entities.Node):
-                res += indent_symbol * indent + self.index.printTree(indent)
-            else:
-                res += indent_symbol * indent + str(self.index) + '\n'
         return res
 
     @addToClass(entities.UnaryExpr)

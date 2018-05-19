@@ -33,22 +33,24 @@ def p_program(p):
 
 def p_instructions(p):
     """instructions : instructions instruction
-                    | instruction
     """
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = entities.Instructions(p[1], p[2])
+    p[0] = entities.Instructions(p[1], p[2], p.lineo)
+
+
+def p_instructions1(p):
+    """instructions : instruction"""
+    p[0] = p[1]
 
 
 def p_braced_instructions(p):
     """braced_instructions : '{' instructions '}'
-                           | instruction ';'
     """
-    if p[1] == '{':
-        p[0] = entities.BracedInstructions(p[2])
-    else:
-        p[0] = entities.Instructions(None, p[1])
+    p[0] = entities.BracedInstructions(p[2], p.lineo)
+
+
+def p_braced_instructions1(p):
+    """braced_instructions : instruction ';'"""
+    p[0] = p[1]
 
 
 def p_instruction(p):
@@ -65,7 +67,7 @@ def p_instruction(p):
 
 def p_assign(p):
     """assign : variable assign_op expression ';'"""
-    p[0] = entities.Assign(p[1], p[2], p[3])
+    p[0] = entities.Assign(p[1], p[2], p[3], p.lineo)
 
 
 def p_assign_op(p):
@@ -79,24 +81,26 @@ def p_assign_op(p):
 
 
 def p_variable(p):
-    """variable : ID
-                | ID '[' array_ref ']'
+    """variable : ID    """
+    p[0] = entities.Variable(p[1], p.lineo(1))
+
+
+def p_variable_array_ref(p):
+    """variable :  ID '[' array_ref ']'
     """
-    if len(p) == 2:
-        p[0] = entities.Variable(p[1])
-    else:
-        p[0] = entities.ArrayRef(p[1], p[3])
+    p[0] = entities.ArrayRef(p[1], p[3], p.lineo(1))
 
 
 def p_array_ref(p):
-    """array_ref : ID
-                 | expression
-                 | array_ref ',' array_ref
+    """array_ref :  expression
     """
-    if len(p) > 2:
-        p[0] = entities.MatrixIndexes(p[1], p[3])
-    else:
-        p[0] = p[1]
+    p[0] = entities.MatrixIndexes(p[1], p.lineo(1))
+
+
+def p_array_ref_rec(p):
+    """array_ref : array_ref ',' array_ref
+    """
+    p[0] = entities.MatrixExactIndexes(p[1], p[3], p.lineo(1))
 
 
 def p_expression(p):
@@ -116,14 +120,16 @@ def p_constant(p):
     p[0] = p[1]
 
 
-def p_unary_expr(p):
+def p_unary_minus(p):
     """unary_expr : '-' expression
-                  | expression TRANSP
     """
-    if p[1] == '-':
-        p[0] = entities.UnaryExpr(p[1], p[2])
-    else:
-        p[0] = entities.UnaryExpr(p[2], p[1])
+    p[0] = entities.UnaryExpr(p[1], p[2], p.lineo(1))
+
+
+def p_unary_transp(p):
+    """unary_expr : expression TRANSP
+    """
+    p[0] = entities.UnaryExpr(p[2], p[1], p.lineo(1))
 
 
 def p_binary_expr(p):
@@ -142,55 +148,62 @@ def p_binary_expr(p):
                    | expression DOTMUL expression
                    | expression DOTDIV expression
     """
-    p[0] = entities.BinaryExpr(p[1], p[2], p[3])
+    p[0] = entities.BinaryExpr(p[1], p[2], p[3], p.lineo(2))
 
 
-def p_matrix_init(p):
-    """matrix_init : ZEROS '(' expression ')'
-                   | ZEROS '(' expression ',' expression ')'
-                   | ONES '(' expression ')'
-                   | ONES '(' expression ',' expression ')'
-                   | EYE '(' expression ')'
-                   | '[' rows ';' rows ']'
-                   | '[' rows ']'
-    """
-    if p[1] == "zeros":
-        if len(p) < 7:
-            p[0] = entities.ZerosMatrixInit(p[3], None)
-        else:
-            p[0] = entities.ZerosMatrixInit(p[3], p[5])
-    elif p[1] == "ones":
-        if len(p) < 7:
-            p[0] = entities.OnesMatrixInit(p[3], None)
-        else:
-            p[0] = entities.OnesMatrixInit(p[3], p[5])
-    elif p[1] == "eye":
-        p[0] = entities.EyeMatrixInit(p[3])
-    else:
-        if len(p) > 4:
-            p[0] = entities.MatrixInit(p[2], p[4])
-        else:
-            p[0] = entities.MatrixInit(None, p[2])
+def p_matrix_zeros_square_init(p):
+    """matrix_init : ZEROS '(' expression ')'"""
+    p[0] = entities.ZerosMatrixInit(p[3], None, p.lineo(1))
+
+
+def p_matrix_zeros_init(p):
+    """matrix_init :  ZEROS '(' expression ',' expression ')'"""
+    p[0] = entities.ZerosMatrixInit(p[3], p[5], p.lineo(1))
+
+
+def p_matrix_ones_square_init(p):
+    """matrix_init :  ONES '(' expression ')'"""
+    p[0] = entities.OnesMatrixInit(p[3], None, p.lineo(1))
+
+
+def p_matrix_ones_init(p):
+    """matrix_init :  ONES '(' expression ',' expression ')'"""
+    p[0] = entities.OnesMatrixInit(p[3], p[5], p.lineo(1))
+
+
+def p_matrix_eye_init(p):
+    """matrix_init : EYE '(' expression ')'"""
+    p[0] = entities.EyeMatrixInit(p[3], p.lineo(1))
+
+
+def p_matrix_rows_init(p):
+    """matrix_init : '[' rows ']'
+     """
+    p[0] = entities.MatrixInit(None, p[2], p.lineo(1))
 
 
 def p_rows(p):
     """rows : row ';' rows
-            | row
     """
-    if len(p) > 2:
-        p[0] = entities.MatrixVector(p[1], p[3])
-    else:
-        p[0] = entities.MatrixVector(None, p[1])
+    p[0] = entities.MatrixVector(p[1], p[3], p.lineo(1))
+
+
+def p_rows1(p):
+    """rows :  row
+    """
+    p[0] = entities.MatrixVector(None, p[1], p.lineo(1))
 
 
 def p_row(p):
     """row : row ',' expression
-           | expression
     """
-    if len(p) > 2:
-        p[0] = entities.MatrixRow(p[1], p[3])
-    else:
-        p[0] = entities.MatrixRow(None, p[1])
+    p[0] = entities.MatrixRow(p[1], p[3], p.lineo(1))
+
+
+def p_row1(p):
+    """row : expression
+    """
+    p[0] = entities.MatrixRow(None, p[1], p.lineo(1))
 
 
 def p_break_instruction(p):
