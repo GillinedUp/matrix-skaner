@@ -110,6 +110,11 @@ class MatrixVector(Node):
         self.line = line;
 
 
+class LoopControlInstruction(Node):
+    def __init__(self, loop_control):
+        self.loop_control = loop_control
+
+
 class ReturnInstruction(Node):
     def __init__(self, expression):
         self.expression = expression
@@ -127,9 +132,9 @@ class StringExpressions(Node):
 
 
 class IfInstruction(Node):
-    def __init__(self, expression, instructions, else_if_instructions, else_instructions):
+    def __init__(self, expression, instruction, else_if_instructions, else_instructions):
         self.expression = expression
-        self.instructions = instructions
+        self.instruction = instruction
         self.else_if_instructions = else_if_instructions
         self.else_instructions = else_instructions
 

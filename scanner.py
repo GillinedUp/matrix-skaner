@@ -57,7 +57,7 @@ t_ignore_comment = r'\#.*'
 
 
 def t_STRING(t):
-    r'".+"'
+    r'".+?"'
     t.value = str(t.value)
     return t
 
@@ -75,7 +75,7 @@ def t_FLOAT(t):
 
 
 def t_INT(t):
-    r'\b[0-9]+\b'
+    r'[0-9]+'
     t.value = int(t.value)
     return t
 
