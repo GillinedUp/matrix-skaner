@@ -75,6 +75,16 @@ class TreePrinter:
     @addToClass(entities.MatrixIndexes)
     def printTree(self, indent=0):
         res = ""
+        if issubclass(self.index.__class__, entities.Node):
+            res += self.index.printTree(indent)
+        else:
+            res += indent_symbol * indent + str(self.index) + '\n'
+
+        return res
+
+    @addToClass(entities.MatrixExactIndexes)
+    def printTree(self, indent=0):
+        res = ""
         if issubclass(self.dim_index.__class__, entities.Node):
             res += self.dim_index.printTree(indent)
         else:
@@ -86,6 +96,7 @@ class TreePrinter:
             res += indent_symbol * indent + str(self.index) + '\n'
 
         return res
+
 
     @addToClass(entities.UnaryExpr)
     def printTree(self, indent=0):

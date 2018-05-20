@@ -10,23 +10,23 @@ class NodeVisitor(object):
         visitor = getattr(self, method, self.generic_visit)
         return visitor(node)
 
-    # def generic_visit(self, node):  # Called if no explicit visitor function exists for a node.
-    #     if isinstance(node, list):
-    #         for elem in node:
-    #             self.visit(elem)
-    #     else:
-    #         for child in node.children:
-    #             if isinstance(child, list):
-    #                 for item in child:
-    #                     if isinstance(item, entities.Node):
-    #                         self.visit(item)
-    #             elif isinstance(child, entities.Node):
-    #                 self.visit(child)
+    def generic_visit(self, node):  # Called if no explicit visitor function exists for a node.
+        if isinstance(node, list):
+            for elem in node:
+                self.visit(elem)
+        else:
+            for child in node.children:
+                if isinstance(child, list):
+                    for item in child:
+                        if isinstance(item, entities.Node):
+                            self.visit(item)
+                elif isinstance(child, entities.Node):
+                    self.visit(child)
 
     # simpler version of generic_visit, not so general
-    def generic_visit(self, node):
-        for child in node.children:
-            self.visit(child)
+    # def generic_visit(self, node):
+    #     for child in node.children:
+    #         self.visit(child)
 
 
 class TypeChecker(NodeVisitor):
