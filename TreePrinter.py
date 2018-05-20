@@ -16,7 +16,7 @@ class TreePrinter:
     @addToClass(entities.Node)
     def printTree(self, indent=0):
         res = indent_symbol * indent
-        #res += self.string_expressions.printTree(indent)
+        # res += self.string_expressions.printTree(indent)
         return res
 
     @addToClass(entities.Instructions)
@@ -97,7 +97,6 @@ class TreePrinter:
 
         return res
 
-
     @addToClass(entities.UnaryExpr)
     def printTree(self, indent=0):
         res = indent_symbol * indent + self.operator + '\n'
@@ -155,6 +154,7 @@ class TreePrinter:
                 res += self.columns.printTree(indent + 1)
             else:
                 res += indent_symbol * (indent + 1) + str(self.columns) + '\n'
+
         return res
 
     @addToClass(entities.EyeMatrixInit)
@@ -171,9 +171,10 @@ class TreePrinter:
     @addToClass(entities.MatrixInit)
     def printTree(self, indent=0):
         res = indent_symbol * indent + 'MATRIX\n'
+
         if self.rows is not None:
             res += self.rows.printTree(indent + 1)
-        #res += self.row.printTree(indent + 1)
+
         return res
 
     @addToClass(entities.MatrixRow)
@@ -240,9 +241,6 @@ class TreePrinter:
             res += indent * indent_symbol + "ELSE\n"
             res += self.else_if_instructions.printTree(indent + 1)
 
-        if self.else_instructions is not None:
-            res += indent * indent_symbol + "ELSE\n"
-            res += self.else_instructions.printTree(indent + 1)
         return res
 
     @addToClass(entities.WhileInstruction)

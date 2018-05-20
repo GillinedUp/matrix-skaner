@@ -25,9 +25,12 @@ def p_error(p):
     else:
         print("Unexpected end of input")
 
+
 def p_program(p):
-    """program : instructions"""
+    """program : instructions
+    """
     p[0] = p[1]
+
 
 def p_instructions(p):
     """instructions : instructions instruction
@@ -36,7 +39,8 @@ def p_instructions(p):
 
 
 def p_instructions1(p):
-    """instructions : instruction"""
+    """instructions : instruction
+    """
     p[0] = p[1]
 
 
@@ -47,7 +51,8 @@ def p_braced_instructions(p):
 
 
 def p_braced_instructions1(p):
-    """braced_instructions : instruction ';'"""
+    """braced_instructions : instruction
+    """
     p[0] = p[1]
 
 
@@ -64,7 +69,8 @@ def p_instruction(p):
 
 
 def p_assign(p):
-    """assign : variable assign_op expression ';'"""
+    """assign : variable assign_op expression ';'
+    """
     p[0] = entities.Assign(p[1], p[2], p[3], p.lineno)
 
 
@@ -79,7 +85,8 @@ def p_assign_op(p):
 
 
 def p_variable(p):
-    """variable : ID    """
+    """variable : ID
+    """
     p[0] = entities.Variable(p[1], p.lineno(1))
 
 
@@ -150,22 +157,26 @@ def p_binary_expr(p):
 
 
 def p_matrix_zeros_square_init(p):
-    """matrix_init : ZEROS '(' expression ')'"""
+    """matrix_init : ZEROS '(' expression ')'
+    """
     p[0] = entities.ZerosMatrixInit(p[3], p[3], p.lineno(1))
 
 
 def p_matrix_zeros_init(p):
-    """matrix_init :  ZEROS '(' expression ',' expression ')'"""
+    """matrix_init :  ZEROS '(' expression ',' expression ')'
+    """
     p[0] = entities.ZerosMatrixInit(p[3], p[5], p.lineno(1))
 
 
 def p_matrix_ones_square_init(p):
-    """matrix_init :  ONES '(' expression ')'"""
+    """matrix_init :  ONES '(' expression ')'
+    """
     p[0] = entities.OnesMatrixInit(p[3], p[3], p.lineno(1))
 
 
 def p_matrix_ones_init(p):
-    """matrix_init :  ONES '(' expression ',' expression ')'"""
+    """matrix_init :  ONES '(' expression ',' expression ')'
+    """
     p[0] = entities.OnesMatrixInit(p[3], p[5], p.lineno(1))
 
 
@@ -205,79 +216,75 @@ def p_row1(p):
 
 
 def p_break_instruction(p):
-    """break_instruction : BREAK ';'"""
+    """break_instruction : BREAK ';'
+    """
     p[0] = entities.LoopControlInstruction(p[1])
 
 
 def p_continue_instruction(p):
-    """continue_instruction : CONTINUE ';'"""
+    """continue_instruction : CONTINUE ';'
+    """
     p[0] = entities.LoopControlInstruction(p[1])
 
 
 def p_return_instruction(p):
-    """return_instruction : RETURN expression ';'"""
+    """return_instruction : RETURN expression ';'
+    """
     p[0] = entities.ReturnInstruction(p[2])
 
 
 def p_print_instruction(p):
-    """print_instruction : PRINT string_expressions ';'"""
+    """print_instruction : PRINT string_expressions ';'
+    """
     p[0] = entities.PrintInstruction(p[2])
 
 
 def p_string_expressions(p):
     """string_expressions : string_expressions ',' string_expression
-                          | string_expression"""
-    if len(p) >= 4:
-        p[0] = entities.StringExpressions(p[1], p[3])
-    else:
-        p[0] = entities.StringExpressions(None, p[1])
+    """
+    p[0] = entities.StringExpressions(p[1], p[3])
+
+
+def p_string_expressions_single(p):
+    """string_expressions : string_expression
+    """
+    p[0] = entities.StringExpressions(None, p[1])
 
 
 def p_string_expression(p):
     """string_expression : STRING
-                         | expression"""
-
+                         | expression
+    """
     p[0] = entities.StringExpressions(None, p[1])
 
 
 def p_if_instruction(p):
-    """if_instruction : IF '(' expression ')' instruction
-                      | IF '(' expression ')' instruction ELSE instruction
-                      | IF '(' expression ')' instruction else_if_instruction
-                      | IF '(' expression ')' instruction else_if_instruction ELSE instruction
+    """if_instruction : IF '(' expression ')' braced_instructions
     """
-    if len(p) >= 9:
-        p[0] = entities.IfInstruction(p[3], p[5], p[6], p[8])
-    elif len(p) == 8:
-        p[0] = entities.IfInstruction(p[3], p[5], p[7], None)
-    elif len(p) == 7:
-        p[0] = entities.IfInstruction(p[3], p[5], p[6], None)
-    else:
-        p[0] = entities.IfInstruction(p[3], p[5], None, None)
+    p[0] = entities.IfInstruction(p[3], p[5], None)
 
 
-def p_else_if_instruction(p):
-    """else_if_instruction : ELSE IF '(' expression ')' instruction
-                           | ELSE IF '(' expression ')' instruction else_if_instruction
+def p_if_instruction_else(p):
+    """if_instruction : IF '(' expression ')' braced_instructions ELSE braced_instructions
     """
-    if len(p) >= 8:
-        p[0] = entities.IfInstruction(p[4], p[6], p[7], None)
-    else:
-        p[0] = entities.IfInstruction(p[4], p[6], None, None)
+    p[0] = entities.IfInstruction(p[3], p[5], p[7])
 
 
 def p_iteration_instruction(p):
     """iteration_instruction : WHILE '(' expression ')' braced_instructions
-                             | FOR range_expression braced_instructions
     """
-    if p[1] == "while":
-        p[0] = entities.WhileInstruction(p[3], p[5])
-    else:
-        p[0] = entities.ForInstruction(p[2], p[3])
+    p[0] = entities.WhileInstruction(p[3], p[5])
+
+
+def p_iteration_instruction_for(p):
+    """iteration_instruction : FOR range_expression braced_instructions
+    """
+    p[0] = entities.ForInstruction(p[2], p[3])
 
 
 def p_range_expression(p):
-    """range_expression : ID '=' expression ':' expression"""
+    """range_expression : ID '=' expression ':' expression
+    """
     p[0] = entities.RangeExpression(p[1], p[3], p[5])
 
 
