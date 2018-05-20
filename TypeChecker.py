@@ -218,10 +218,12 @@ class TypeChecker(NodeVisitor):
                     print("Error: Invalid operation {} for matrix types, line {}".format(node.operator, node.line))
                     return None
 
-                if not isinstance(left, entities.MatrixVector):
+                if isinstance(left, entities.ZerosMatrixInit) or isinstance(left, entities.OnesMatrixInit) or isinstance(left,
+                    entities.EyeMatrixInit):
                     matrix1_columns = left.columns
                     matrix1_rows = left.rows
-                if not isinstance(right, entities.MatrixVector):
+                if isinstance(right, entities.ZerosMatrixInit) or isinstance(right,
+                  entities.OnesMatrixInit) or isinstance(right,  entities.EyeMatrixInit):
                     matrix2_columns = right.columns
                     matrix2_rows = right.rows
 
