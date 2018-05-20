@@ -12,7 +12,7 @@ class MatrixSymbol():
     def __init__(self, type, value, columns, rows):
         self.value = value
         self.type = type
-        self.column = columns
+        self.columns = columns
         self.rows = rows
 
 

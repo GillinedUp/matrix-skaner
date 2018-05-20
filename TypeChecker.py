@@ -57,7 +57,7 @@ class TypeChecker(NodeVisitor):
                                MatrixSymbol(node.assign_op, node.expression, node.expression.columns,
                                             node.expression.rows))
             elif isinstance(assigments, entities.MatrixVector):
-                self.table.put(str(node.variable), MatrixSymbol(node.assign_op, node.expression, self.columns, self.elements / self.columns))
+                self.table.put(str(node.variable), MatrixSymbol(node.assign_op, node.expression, self.rows, self.elements / self.rows))
             else:
                 self.table.put(str(node.variable), VariableSymbol(node.assign_op, node.expression))
 
@@ -100,3 +100,73 @@ class TypeChecker(NodeVisitor):
 
     def visit_Variable(self, node):
         return self.visit((self.table.get(node.variable)).variable)
+
+    def visit_ArrayRef(self, node):
+        matrix = self.table.get(node.matrix_name)
+
+        if matrix is None or not isinstance(matrix, MatrixSymbol):
+            print("Error: Variable {} is not a matrix, line {}".format(node.matrix_name, node.line))
+            return None
+
+        if isinstance(node.index, entities.MatrixIndexes):
+            if matrix.rows > 1:
+                print("Error: Cannot access 2D matrix {} with only one index, line {}".format(node.matrix_name, node.line))
+                return None
+            return node
+        else:
+            if matrix.rows == 1 and node.index.row is not None:
+                print("Cannot access 1D matrix {} with two indexes, line {}".format(node.matrix_name, node.line))
+                return None
+
+        try:
+            columns = self.visit(node.index.dim_index)
+            if columns >= matrix.columns:
+                print("Error: Index {} out of matrix bounds, line {}".format(columns, node.line))
+                return None
+
+            rows = self.visit(node.index.index)
+            if rows >= matrix.rows:
+                print("Error: Index {} out of matrix bounds, line {}".format(rows, node.line))
+                return None
+            return node
+        except TypeError:
+            print("Error: Invalid matrix index, line {}".format(node.line))
+            return None
+
+    def visit_MatrixInit(self, node):
+        self.rows = 0
+        self.elements = 0
+        vector = self.visit(node.rows)
+        return vector
+
+    def visit_MatrixVector(self, node):
+        self.rows += 1
+        rowIndex = self.rows
+        self.rowsLengths[rowIndex] = 0
+
+        self.visit(node.rows)
+        self.visit(node.row)
+
+        if self.elements != (self.rowsLengths[rowIndex] * self.rows):
+            print("Error: incorrect matrix dimensions, line {}".format(node.line))
+            return None
+
+        return node
+
+    def visit_MatrixRow(self, node):
+        self.visit(node.rows)
+        self.visit(node.row)
+        self.rowsLengths[self.rows] += 1
+        self.elements += 1
+
+    def visit_MatrixIndexes(self, node):
+        return self.visit(node.index)
+
+    def visit_BinaryExpr(self, node):
+        left = self.table.get(str(node.left))
+        right = self.table.get(str(node.right))
+
+
+
+
+
