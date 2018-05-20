@@ -56,7 +56,7 @@ class MatrixIndexes(Node):
 
 class UnaryExpr(Node):
     def __init__(self, operator, expr, line):
-        self.expr = expr
+        self.expression = expr
         self.operator = operator
         self.line = line
 

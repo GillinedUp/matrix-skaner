@@ -23,7 +23,7 @@ class NodeVisitor(object):
     #             elif isinstance(child, entities.Node):
     #                 self.visit(child)
 
-    #simpler version of generic_visit, not so general
+    # simpler version of generic_visit, not so general
     def generic_visit(self, node):
         if isinstance(node, list):
             for elem in node:
@@ -60,11 +60,21 @@ class TypeChecker(NodeVisitor):
                                MatrixSymbol(node.assign_op, node.expression, node.expression.columns,
                                             node.expression.rows))
             elif isinstance(assigments, entities.MatrixVector):
-                self.table.put(str(node.variable.value), MatrixSymbol(node.assign_op, node.expression, self.rows, self.elements / self.rows))
+                self.table.put(str(node.variable.value),
+                               MatrixSymbol(node.assign_op, node.expression, self.rows, self.elements / self.rows))
             else:
-                self.table.put(str(node.variable.value), VariableSymbol(node.assign_op, node.expression))
+                self.table.put(str(node.variable), VariableSymbol(node.assign_op, node.expression))
 
     def visit_ZerosMatrixInit(self, node):
+        return self.check_matrix(node)
+
+    def visit_OnesMatrixInit(self, node):
+        return self.check_matrix(node)
+
+    def visit_EyeMatrixInit(self, node):
+        return self.check_matrix(node)
+
+    def check_matrix(self, node):
         columns = self.visit(node.columns)
         rows = self.visit(node.rows)
 
@@ -77,12 +87,13 @@ class TypeChecker(NodeVisitor):
 
         return node;
 
+
     def check_matrix_init(self, dim, node):
         if not isinstance(dim, int) and not isinstance(dim, entities.BinaryExpr):
-            print("Error: Zeros Matrix size has incorrect type {}, line {}".format(dim, node.line))
+            print("Error: Matrix size has incorrect type {}, line {}".format(dim, node.line))
             return True
         if isinstance(dim, int) and dim <= 0:
-            print("Error: Zeros Matrix size is a non positive size of {}, line {}".format(dim, node.line))
+            print("Error: Matrix size is a non positive size of {}, line {}".format(dim, node.line))
             return True
 
     def visit_int(self, node):
@@ -116,7 +127,8 @@ class TypeChecker(NodeVisitor):
 
         if isinstance(node.index, entities.MatrixIndexes):
             if matrix.columns > 1:
-                print("Error: Cannot access 2D matrix {} with only one index, line {}".format(node.matrix_name, node.line))
+                print("Error: Cannot access 2D matrix {} with only one index, line {}".format(node.matrix_name,
+                                                                                              node.line))
                 return None
             return node
         else:
@@ -173,10 +185,10 @@ class TypeChecker(NodeVisitor):
         left = self.table.get(str(node.left))
         right = self.table.get(str(node.right))
 
-        matrix1_rows, matrix1_columns, matrix2_rows, maatrix2_columns = 0, 0, 0, 0
+        matrix1_rows, matrix1_columns, matrix2_rows, matrix2_columns = 0, 0, 0, 0
 
         if left is None:
-            lfet = self.visit(node.left)
+            left = self.visit(node.left)
             if isinstance(node.left, entities.MatrixInit):
                 matrix1_rows = self.rows
                 matrix1_columns = self.elements / self.rows
@@ -184,13 +196,41 @@ class TypeChecker(NodeVisitor):
         if right is None:
             right = self.visit(node.right)
             if isinstance(node.right, entities.MatrixInit):
-                matrx2_rows = self.rows
-                matrix2_columns  = self.elements / self.rows
+                matrix2_rows = self.rows
+                matrix2_columns = self.elements / self.rows
 
+        if isinstance(left, VariableSymbol) or isinstance(left, int) or isinstance(left, float):
+            if isinstance(right, VariableSymbol) or isinstance(right, int) or isinstance(right, float):
+                if node.operator == ".*" or node.operator == "./" or node.operator == ".+" or node.operator == ".-":
+                    print("Error: Invalid operation {} for numeric types, line {}".format(node.operator, node.line))
+                else:
+                    if node.operator != "==" and node.operator != "!=" and node.operator != "*" and node.operator != "/":
+                        print("Error: Invalid operation {} for numeric-matrix types, line {}".format(node.operator,
+                                                                                                     node.line))
+        else:
+            if isinstance(right, VariableSymbol) or isinstance(right, int) or isinstance(right, float):
+                if node.operator != "==" and node.operator != "!=":
+                    print("Error: Invalid operation {} for matrix-numeric types, line {}".format(node.operator,
+                                                                                                 node.line))
+            else:
+                if node.operator != "==" and node.operator != "!=" and node.operator != ".+" and node.operator != ".-" \
+                        and node.operator != ".*" and node.operator != "./":
+                    print("Error: Invalid operation {} for matrix types, line {}".format(node.operator, node.line))
+                    return None
 
+                if not isinstance(left, entities.MatrixVector):
+                    matrix1_columns = left.columns
+                    matrix1_rows = left.rows
+                if not isinstance(right, entities.MatrixVector):
+                    matrix2_columns = right.columns
+                    matrix2_rows = right.rows
 
+                if node.operator == ".+" or node.operator == ".-":
+                    if matrix1_columns != matrix2_columns or matrix1_rows != matrix2_rows:
+                        print("Error: Incompatible matrix sizes for operation {}, line {}".format(node.operator, node.line))
+                elif node.operator == ".*" or node.operator == "./":
+                    if matrix1_columns != matrix2_rows:
+                        print("Error: Incompatible matrix sizes  for operation {}, line {}".format(node.operator,
+                                                                                                  node.line))
 
-
-
-
-
+        return node

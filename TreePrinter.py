@@ -102,10 +102,10 @@ class TreePrinter:
     def printTree(self, indent=0):
         res = indent_symbol * indent + self.operator + '\n'
 
-        if issubclass(self.expr.__class__, entities.Node):
-            res += self.expr.printTree(indent + 1)
+        if issubclass(self.expression.__class__, entities.Node):
+            res += self.expression.printTree(indent + 1)
         else:
-            res += indent_symbol * indent + str(self.expr) + '\n'
+            res += indent_symbol * indent + str(self.expression) + '\n'
         return res
 
     @addToClass(entities.BinaryExpr)

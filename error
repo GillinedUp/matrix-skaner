@@ -8,5 +8,10 @@ c = zeros(5);
 
 s = c[0, 8];
 
-
 h = zeros(kitki) ;
+
+l = c .* b;
+
+a = c + 1 ;
+
+p = c .+ b ;
