@@ -10,23 +10,27 @@ class NodeVisitor(object):
         visitor = getattr(self, method, self.generic_visit)
         return visitor(node)
 
-    def generic_visit(self, node):  # Called if no explicit visitor function exists for a node.
+    # def generic_visit(self, node):  # Called if no explicit visitor function exists for a node.
+    #     if isinstance(node, list):
+    #         for elem in node:
+    #             self.visit(elem)
+    #     else:
+    #         for child in node.children:
+    #             if isinstance(child, list):
+    #                 for item in child:
+    #                     if isinstance(item, entities.Node):
+    #                         self.visit(item)
+    #             elif isinstance(child, entities.Node):
+    #                 self.visit(child)
+
+    #simpler version of generic_visit, not so general
+    def generic_visit(self, node):
         if isinstance(node, list):
             for elem in node:
                 self.visit(elem)
-        else:
+        elif node is not None:
             for child in node.children:
-                if isinstance(child, list):
-                    for item in child:
-                        if isinstance(item, entities.Node):
-                            self.visit(item)
-                elif isinstance(child, entities.Node):
-                    self.visit(child)
-
-    # simpler version of generic_visit, not so general
-    # def generic_visit(self, node):
-    #     for child in node.children:
-    #         self.visit(child)
+                self.visit(child)
 
 
 class TypeChecker(NodeVisitor):
@@ -45,21 +49,20 @@ class TypeChecker(NodeVisitor):
         print(node)
 
     def visit_Assign(self, node):
-        variable = self.table.get(node.variable)
-        assign_op = self.visit(node.assign_op)
+        self.visit(node.assign_op)
         assigments = self.visit(node.expression)
 
         if assigments is not None:
             if isinstance(node.expression, entities.ZerosMatrixInit) \
                     or isinstance(node.expression, entities.OnesMatrixInit) \
                     or isinstance(node.expression, entities.EyeMatrixInit):
-                self.table.put(str(node.variable),
+                self.table.put(str(node.variable.value),
                                MatrixSymbol(node.assign_op, node.expression, node.expression.columns,
                                             node.expression.rows))
             elif isinstance(assigments, entities.MatrixVector):
-                self.table.put(str(node.variable), MatrixSymbol(node.assign_op, node.expression, self.rows, self.elements / self.rows))
+                self.table.put(str(node.variable.value), MatrixSymbol(node.assign_op, node.expression, self.rows, self.elements / self.rows))
             else:
-                self.table.put(str(node.variable), VariableSymbol(node.assign_op, node.expression))
+                self.table.put(str(node.variable.value), VariableSymbol(node.assign_op, node.expression))
 
     def visit_ZerosMatrixInit(self, node):
         columns = self.visit(node.columns)
@@ -99,7 +102,10 @@ class TypeChecker(NodeVisitor):
         return 'transp'
 
     def visit_Variable(self, node):
-        return self.visit((self.table.get(node.variable)).variable)
+        try:
+            return self.visit((self.table.get(node.value)).value)
+        except AttributeError:
+            return None
 
     def visit_ArrayRef(self, node):
         matrix = self.table.get(node.matrix_name)
@@ -109,16 +115,17 @@ class TypeChecker(NodeVisitor):
             return None
 
         if isinstance(node.index, entities.MatrixIndexes):
-            if matrix.rows > 1:
+            if matrix.columns > 1:
                 print("Error: Cannot access 2D matrix {} with only one index, line {}".format(node.matrix_name, node.line))
                 return None
             return node
         else:
-            if matrix.rows == 1 and node.index.row is not None:
+            if matrix.columns == 1 and node.index.row is not None:
                 print("Cannot access 1D matrix {} with two indexes, line {}".format(node.matrix_name, node.line))
                 return None
 
         try:
+
             columns = self.visit(node.index.dim_index)
             if columns >= matrix.columns:
                 print("Error: Index {} out of matrix bounds, line {}".format(columns, node.line))

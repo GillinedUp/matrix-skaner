@@ -173,7 +173,7 @@ class TreePrinter:
         res = indent_symbol * indent + 'MATRIX\n'
         if self.rows is not None:
             res += self.rows.printTree(indent + 1)
-        res += self.row.printTree(indent + 1)
+        #res += self.row.printTree(indent + 1)
         return res
 
     @addToClass(entities.MatrixRow)

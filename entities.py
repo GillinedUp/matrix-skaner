@@ -85,14 +85,14 @@ class OnesMatrixInit(Node):
 
 class EyeMatrixInit(Node):
     def __init__(self, size, line):
-        self.size = size
+        self.rows = size
+        self.columns = size
         self.line = line
 
 
 class MatrixInit(Node):
-    def __init__(self, rows, row, line):
+    def __init__(self, rows, line):
         self.rows = rows
-        self.row = row
         self.line = line
 
 

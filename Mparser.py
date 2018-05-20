@@ -151,7 +151,7 @@ def p_binary_expr(p):
 
 def p_matrix_zeros_square_init(p):
     """matrix_init : ZEROS '(' expression ')'"""
-    p[0] = entities.ZerosMatrixInit(p[3], None, p.lineno(1))
+    p[0] = entities.ZerosMatrixInit(p[3], p[3], p.lineno(1))
 
 
 def p_matrix_zeros_init(p):
@@ -161,7 +161,7 @@ def p_matrix_zeros_init(p):
 
 def p_matrix_ones_square_init(p):
     """matrix_init :  ONES '(' expression ')'"""
-    p[0] = entities.OnesMatrixInit(p[3], None, p.lineno(1))
+    p[0] = entities.OnesMatrixInit(p[3], p[3], p.lineno(1))
 
 
 def p_matrix_ones_init(p):
@@ -177,7 +177,7 @@ def p_matrix_eye_init(p):
 def p_matrix_rows_init(p):
     """matrix_init : '[' rows ']'
      """
-    p[0] = entities.MatrixInit(None, p[2], p.lineno(1))
+    p[0] = entities.MatrixInit(p[2], p.lineno(1))
 
 
 def p_rows(p):
