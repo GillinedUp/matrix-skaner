@@ -4,7 +4,6 @@ from scanner import lexer
 from TreePrinter import TreePrinter
 from TypeChecker import TypeChecker
 from io import StringIO
-import sys
 
 debug = True
 
