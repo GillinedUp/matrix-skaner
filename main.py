@@ -3,6 +3,8 @@ import Mparser
 from scanner import lexer
 from TreePrinter import TreePrinter
 from TypeChecker import TypeChecker
+from io import StringIO
+import sys
 
 debug = True
 
@@ -19,7 +21,16 @@ def test_parser():
     text = file.read()
     lexer.input(text)
     ast = parser.parse(text, lexer=lexer)
+
+    old_stdout = sys.stdout
+    sys.stdout = mystdout = StringIO()
+
     print(ast.printTree())
+
+    sys.stdout = old_stdout
+
+    with open('testing_tree', 'w') as test_file:
+        test_file.write(mystdout.getvalue())
 
 
 def run():
