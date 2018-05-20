@@ -228,40 +228,45 @@ def p_print_instruction(p):
 
 def p_string_expressions(p):
     """string_expressions : string_expressions ',' string_expression
-                          | string_expression"""
-    if len(p) >= 4:
-        p[0] = entities.StringExpressions(p[1], p[3])
-    else:
-        p[0] = entities.StringExpressions(None, p[1])
+    """
+    p[0] = entities.StringExpressions(p[1], p[3])
+
+
+def p_string_expressions_single(p):
+    """string_expressions : string_expression
+    """
+    p[0] = entities.StringExpressions(None, p[1])
 
 
 def p_string_expression(p):
     """string_expression : STRING
-                         | expression"""
-
+                         | expression
+    """
     p[0] = entities.StringExpressions(None, p[1])
 
 
 def p_if_instruction(p):
     """if_instruction : IF '(' expression ')' instruction
     """
-    p[0] = entities.IfInstruction(p[3], p[5], None, None)
+    p[0] = entities.IfInstruction(p[3], p[5], None)
 
 
 def p_if_instruction_else(p):
     """if_instruction : IF '(' expression ')' instruction ELSE instruction
     """
-    p[0] = entities.IfInstruction(p[3], p[5], p[7], None)
+    p[0] = entities.IfInstruction(p[3], p[5], p[7])
 
 
 def p_iteration_instruction(p):
     """iteration_instruction : WHILE '(' expression ')' braced_instructions
-                             | FOR range_expression braced_instructions
     """
-    if p[1] == "while":
-        p[0] = entities.WhileInstruction(p[3], p[5])
-    else:
-        p[0] = entities.ForInstruction(p[2], p[3])
+    p[0] = entities.WhileInstruction(p[3], p[5])
+
+
+def p_iteration_instruction_for(p):
+    """iteration_instruction : FOR range_expression braced_instructions
+    """
+    p[0] = entities.ForInstruction(p[2], p[3])
 
 
 def p_range_expression(p):

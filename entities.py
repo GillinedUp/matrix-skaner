@@ -132,11 +132,10 @@ class StringExpressions(Node):
 
 
 class IfInstruction(Node):
-    def __init__(self, expression, instruction, else_if_instructions, else_instructions):
+    def __init__(self, expression, instruction, else_if_instructions):
         self.expression = expression
         self.instruction = instruction
         self.else_if_instructions = else_if_instructions
-        self.else_instructions = else_instructions
 
 
 class WhileInstruction(Node):

@@ -240,9 +240,6 @@ class TreePrinter:
             res += indent * indent_symbol + "ELSE\n"
             res += self.else_if_instructions.printTree(indent + 1)
 
-        if self.else_instructions is not None:
-            res += indent * indent_symbol + "ELSE\n"
-            res += self.else_instructions.printTree(indent + 1)
         return res
 
     @addToClass(entities.WhileInstruction)
