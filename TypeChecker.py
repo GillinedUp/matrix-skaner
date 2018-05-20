@@ -173,6 +173,23 @@ class TypeChecker(NodeVisitor):
         left = self.table.get(str(node.left))
         right = self.table.get(str(node.right))
 
+        matrix1_rows, matrix1_columns, matrix2_rows, maatrix2_columns = 0, 0, 0, 0
+
+        if left is None:
+            lfet = self.visit(node.left)
+            if isinstance(node.left, entities.MatrixInit):
+                matrix1_rows = self.rows
+                matrix1_columns = self.elements / self.rows
+
+        if right is None:
+            right = self.visit(node.right)
+            if isinstance(node.right, entities.MatrixInit):
+                matrx2_rows = self.rows
+                matrix2_columns  = self.elements / self.rows
+
+
+
+
 
 
 
