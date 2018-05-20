@@ -85,7 +85,8 @@ def p_assign_op(p):
 
 
 def p_variable(p):
-    """variable : ID    """
+    """variable : ID
+    """
     p[0] = entities.Variable(p[1], p.lineno(1))
 
 
@@ -282,7 +283,8 @@ def p_iteration_instruction_for(p):
 
 
 def p_range_expression(p):
-    """range_expression : ID '=' expression ':' expression"""
+    """range_expression : ID '=' expression ':' expression
+    """
     p[0] = entities.RangeExpression(p[1], p[3], p[5])
 
 
