@@ -4,9 +4,25 @@ from scanner import lexer
 from TreePrinter import TreePrinter
 from TypeChecker import TypeChecker
 
+debug = True
 
-if __name__ == '__main__':
 
+def test_parser():
+    try:
+        filename = "all_examples"
+        file = open(filename, "r")
+    except IOError:
+        print("Cannot open {0} file".format(filename))
+        sys.exit(0)
+
+    parser = Mparser.parser
+    text = file.read()
+    lexer.input(text)
+    ast = parser.parse(text, lexer=lexer)
+    print(ast.printTree())
+
+
+def run():
     try:
         filename = sys.argv[1] if len(sys.argv) > 1 else "error"
         file = open(filename, "r")
@@ -20,6 +36,13 @@ if __name__ == '__main__':
     ast = parser.parse(text, lexer=lexer)
     print(ast.printTree())
     typeChecker = TypeChecker()
-    typeChecker.visit(ast)   # or alternatively ast.accept(typeChecker)
+    typeChecker.visit(ast)  # or alternatively ast.accept(typeChecker)
     print('Checked')
 
+
+if __name__ == '__main__':
+
+    if debug:
+        test_parser()
+    else:
+        run()
