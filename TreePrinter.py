@@ -161,10 +161,10 @@ class TreePrinter:
     def printTree(self, indent=0):
         res = indent_symbol * indent + 'EYE\n'
 
-        if issubclass(self.size.__class__, entities.Node):
-            res += self.size.printTree(indent + 1)
+        if issubclass(self.columns.__class__, entities.Node):
+            res += self.columns.printTree(indent + 1)
         else:
-            res += indent_symbol * (indent + 1) + str(self.size) + '\n'
+            res += indent_symbol * (indent + 1) + str(self.columns) + '\n'
 
         return res
 
