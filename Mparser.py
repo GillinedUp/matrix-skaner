@@ -25,9 +25,11 @@ def p_error(p):
     else:
         print("Unexpected end of input")
 
+
 def p_program(p):
     """program : instructions"""
     p[0] = p[1]
+
 
 def p_instructions(p):
     """instructions : instructions instruction
@@ -242,28 +244,14 @@ def p_string_expression(p):
 
 def p_if_instruction(p):
     """if_instruction : IF '(' expression ')' instruction
-                      | IF '(' expression ')' instruction ELSE instruction
-                      | IF '(' expression ')' instruction else_if_instruction
-                      | IF '(' expression ')' instruction else_if_instruction ELSE instruction
     """
-    if len(p) >= 9:
-        p[0] = entities.IfInstruction(p[3], p[5], p[6], p[8])
-    elif len(p) == 8:
-        p[0] = entities.IfInstruction(p[3], p[5], p[7], None)
-    elif len(p) == 7:
-        p[0] = entities.IfInstruction(p[3], p[5], p[6], None)
-    else:
-        p[0] = entities.IfInstruction(p[3], p[5], None, None)
+    p[0] = entities.IfInstruction(p[3], p[5], None, None)
 
 
-def p_else_if_instruction(p):
-    """else_if_instruction : ELSE IF '(' expression ')' instruction
-                           | ELSE IF '(' expression ')' instruction else_if_instruction
+def p_if_instruction_else(p):
+    """if_instruction : IF '(' expression ')' instruction ELSE instruction
     """
-    if len(p) >= 8:
-        p[0] = entities.IfInstruction(p[4], p[6], p[7], None)
-    else:
-        p[0] = entities.IfInstruction(p[4], p[6], None, None)
+    p[0] = entities.IfInstruction(p[3], p[5], p[7], None)
 
 
 def p_iteration_instruction(p):

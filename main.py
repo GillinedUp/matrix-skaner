@@ -29,7 +29,7 @@ def test_parser():
 
     sys.stdout = old_stdout
 
-    with open('testing_tree', 'w') as test_file:
+    with open('actual_tree', 'w') as test_file:
         test_file.write(mystdout.getvalue())
 
 
