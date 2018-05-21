@@ -91,19 +91,19 @@ def p_variable(p):
 
 
 def p_variable_array_ref(p):
-    """variable :  ID '[' array_ref ']'
+    """variable : ID '[' array_ref ']'
     """
     p[0] = entities.ArrayRef(p[1], p[3], p.lineno(1))
 
 
 def p_array_ref(p):
-    """array_ref :  expression
+    """array_ref : expression
     """
     p[0] = entities.MatrixIndexes(p[1], p.lineno(1))
 
 
 def p_array_ref_rec(p):
-    """array_ref : array_ref ',' array_ref
+    """array_ref : expression ',' array_ref
     """
     p[0] = entities.MatrixExactIndexes(p[1], p[3], p.lineno(1))
 
@@ -198,7 +198,7 @@ def p_rows(p):
 
 
 def p_rows1(p):
-    """rows :  row
+    """rows : row
     """
     p[0] = entities.MatrixVector(None, p[1], p.lineno(1))
 
@@ -218,74 +218,74 @@ def p_row1(p):
 def p_break_instruction(p):
     """break_instruction : BREAK ';'
     """
-    p[0] = entities.LoopControlInstruction(p[1])
+    p[0] = entities.LoopControlInstruction(p[1], p.lineno(1))
 
 
 def p_continue_instruction(p):
     """continue_instruction : CONTINUE ';'
     """
-    p[0] = entities.LoopControlInstruction(p[1])
+    p[0] = entities.LoopControlInstruction(p[1], p.lineno(1))
 
 
 def p_return_instruction(p):
     """return_instruction : RETURN expression ';'
     """
-    p[0] = entities.ReturnInstruction(p[2])
+    p[0] = entities.ReturnInstruction(p[2], p.lineno(1))
 
 
 def p_print_instruction(p):
     """print_instruction : PRINT string_expressions ';'
     """
-    p[0] = entities.PrintInstruction(p[2])
+    p[0] = entities.PrintInstruction(p[2], p.lineno(1))
 
 
 def p_string_expressions(p):
     """string_expressions : string_expressions ',' string_expression
     """
-    p[0] = entities.StringExpressions(p[1], p[3])
+    p[0] = entities.StringExpressions(p[1], p[3], p.lineno(1))
 
 
 def p_string_expressions_single(p):
     """string_expressions : string_expression
     """
-    p[0] = entities.StringExpressions(None, p[1])
+    p[0] = entities.StringExpressions(None, p[1], p.lineno(1))
 
 
 def p_string_expression(p):
     """string_expression : STRING
                          | expression
     """
-    p[0] = entities.StringExpressions(None, p[1])
+    p[0] = entities.StringExpressions(None, p[1], p.lineno(1))
 
 
 def p_if_instruction(p):
-    """if_instruction : IF '(' expression ')' braced_instructions
+    """if_instruction : IF '(' expression ')' braced_instructions %prec IF
     """
-    p[0] = entities.IfInstruction(p[3], p[5], None)
+    p[0] = entities.IfInstruction(p[3], p[5], None, p.lineno(1))
 
 
 def p_if_instruction_else(p):
     """if_instruction : IF '(' expression ')' braced_instructions ELSE braced_instructions
     """
-    p[0] = entities.IfInstruction(p[3], p[5], p[7])
+    p[0] = entities.IfInstruction(p[3], p[5], p[7], p.lineno(1))
 
 
 def p_iteration_instruction(p):
     """iteration_instruction : WHILE '(' expression ')' braced_instructions
     """
-    p[0] = entities.WhileInstruction(p[3], p[5])
+    p[0] = entities.WhileInstruction(p[3], p[5], p.lineno(1))
 
 
 def p_iteration_instruction_for(p):
     """iteration_instruction : FOR range_expression braced_instructions
     """
-    p[0] = entities.ForInstruction(p[2], p[3])
+    p[0] = entities.ForInstruction(p[2], p[3], p.lineno(1))
 
 
 def p_range_expression(p):
     """range_expression : ID '=' expression ':' expression
     """
-    p[0] = entities.RangeExpression(p[1], p[3], p[5])
+    p[0] = entities.RangeExpression(p[1], p[3], p[5], p.lineno(1))
 
 
 parser = yacc.yacc()

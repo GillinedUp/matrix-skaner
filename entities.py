@@ -111,50 +111,58 @@ class MatrixVector(Node):
 
 
 class LoopControlInstruction(Node):
-    def __init__(self, loop_control):
+    def __init__(self, loop_control, line):
         self.loop_control = loop_control
+        self.line = line
 
 
 class ReturnInstruction(Node):
-    def __init__(self, expression):
+    def __init__(self, expression, line):
         self.expression = expression
+        self.line = line
 
 
 class PrintInstruction(Node):
-    def __init__(self, string_expressions):
+    def __init__(self, string_expressions, line):
         self.string_expressions = string_expressions
+        self.line = line
 
 
 class StringExpressions(Node):
-    def __init__(self, string_expressions, string_expression):
+    def __init__(self, string_expressions, string_expression, line):
         self.string_expressions = string_expressions
         self.string_expression = string_expression
+        self.line = line
 
 
 class IfInstruction(Node):
-    def __init__(self, expression, instruction, else_if_instructions):
+    def __init__(self, expression, instruction, else_if_instructions, line):
         self.expression = expression
         self.instruction = instruction
         self.else_if_instructions = else_if_instructions
+        self.line = line
 
 
 class WhileInstruction(Node):
-    def __init__(self, expression, braced_expression):
+    def __init__(self, expression, braced_expression, line):
         self.expression = expression
         self.braced_expression = braced_expression
+        self.line = line
 
 
 class ForInstruction(Node):
-    def __init__(self, range_expression, braced_expression):
+    def __init__(self, range_expression, braced_expression, line):
         self.range_expression = range_expression
         self.braced_expression = braced_expression
+        self.line = line
 
 
 class RangeExpression(Node):
-    def __init__(self, my_id, expression1, expression2):
+    def __init__(self, my_id, expression1, expression2, line):
         self.my_id = my_id
         self.expression1 = expression1
         self.expression2 = expression2
+        self.line = line
 
 
 class Error(Node):

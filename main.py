@@ -5,7 +5,7 @@ from TreePrinter import TreePrinter
 from TypeChecker import TypeChecker
 from io import StringIO
 
-debug = True
+debug = False
 
 
 def test_parser():

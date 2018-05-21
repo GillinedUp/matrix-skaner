@@ -2,15 +2,15 @@
 
 
 class VariableSymbol:
-    def __init__(self, mtype, value):
-        self.type = mtype
+    def __init__(self, var_type, value):
+        self.type = var_type
         self.value = value
 
 
 class MatrixSymbol:
-    def __init__(self, mtype, value, columns, rows):
+    def __init__(self, m_type, value, columns, rows):
         self.value = value
-        self.type = mtype
+        self.type = m_type
         self.columns = columns
         self.rows = rows
 
