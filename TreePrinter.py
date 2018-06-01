@@ -235,7 +235,7 @@ class TreePrinter:
         res = indent * indent_symbol + "IF\n"
         res += self.expression.printTree(indent + 1)
         res += indent * indent_symbol + "THEN\n"
-        res += self.instruction.printTree(indent + 1)
+        res += self.instructions.printTree(indent + 1)
 
         if self.else_if_instructions is not None:
             res += indent * indent_symbol + "ELSE\n"

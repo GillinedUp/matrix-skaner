@@ -10,27 +10,14 @@ class NodeVisitor(object):
         visitor = getattr(self, method, self.generic_visit)
         return visitor(node)
 
-    # def generic_visit(self, node):  # Called if no explicit visitor function exists for a node.
-    #     if isinstance(node, list):
-    #         for elem in node:
-    #             self.visit(elem)
-    #     else:
-    #         for child in node.children:
-    #             if isinstance(child, list):
-    #                 for item in child:
-    #                     if isinstance(item, entities.Node):
-    #                         self.visit(item)
-    #             elif isinstance(child, entities.Node):
-    #                 self.visit(child)
-
     # simpler version of generic_visit, not so general
     def generic_visit(self, node):
         if isinstance(node, list):
             for elem in node:
                 self.visit(elem)
-        elif node is not None:
-            for child in node.children:
-                self.visit(child)
+        # elif node is not None:
+        #     for child in node.children:
+        #         self.visit(child)
 
 
 class TypeChecker(NodeVisitor):
@@ -40,30 +27,37 @@ class TypeChecker(NodeVisitor):
         self.function = ""
         self.varDict = {}
         self.rowsLengths = {}
+        self.is_in_loop = False
 
     def visit_Instructions(self, node):
         self.visit(node.instructions)
 
     # TODO
     def visit_BracedInstructions(self, node):
-        print(node)
+        self.visit(node.instructions)
 
     def visit_Assign(self, node):
         self.visit(node.assign_op)
-        assigments = self.visit(node.expression)
+        assignments = self.visit(node.expression)
 
-        if assigments is not None:
+        if assignments is not None:
             if isinstance(node.expression, entities.ZerosMatrixInit) \
                     or isinstance(node.expression, entities.OnesMatrixInit) \
                     or isinstance(node.expression, entities.EyeMatrixInit):
                 self.table.put(str(node.variable.value),
-                               MatrixSymbol(node.assign_op, node.expression, node.expression.columns,
+                               MatrixSymbol(node.assign_op,
+                                            node.expression,
+                                            node.expression.columns,
                                             node.expression.rows))
-            elif isinstance(assigments, entities.MatrixVector):
+            elif isinstance(assignments, entities.MatrixVector):
                 self.table.put(str(node.variable.value),
-                               MatrixSymbol(node.assign_op, node.expression, self.rows, self.elements / self.rows))
+                               MatrixSymbol(node.assign_op,
+                                            node.expression,
+                                            self.rows,
+                                            self.elements / self.rows))
             else:
-                self.table.put(str(node.variable), VariableSymbol(node.assign_op, node.expression))
+                self.table.put(str(node.variable.value),
+                               VariableSymbol(node.assign_op, node.expression))
 
     def visit_ZerosMatrixInit(self, node):
         return self.check_matrix(node)
@@ -80,20 +74,25 @@ class TypeChecker(NodeVisitor):
 
         if self.check_matrix_init(rows, node):
             return None
+
         if columns is None:
             return node
+
         if self.check_matrix_init(columns, node):
-            return None;
+            return None
 
-        return node;
-
+        return node
 
     def check_matrix_init(self, dim, node):
+
         if not isinstance(dim, int) and not isinstance(dim, entities.BinaryExpr):
-            print("Error: Matrix size has incorrect type {}, line {}".format(dim, node.line))
+            print("Error: Matrix size has incorrect type {}, line {}"
+                  .format(dim, node.line))
             return True
+
         if isinstance(dim, int) and dim <= 0:
-            print("Error: Matrix size is a non positive size of {}, line {}".format(dim, node.line))
+            print("Error: Matrix size is a non positive size of {}, line {}"
+                  .format(dim, node.line))
             return True
 
     def visit_int(self, node):
@@ -107,9 +106,11 @@ class TypeChecker(NodeVisitor):
 
     def visit_UnaryExpr(self, node):
         if node.operator is '-':
+
             if isinstance(self.visit(node.expression), int):
                 return -self.visit(node.expression)
             return 'negative'
+
         return 'transp'
 
     def visit_Variable(self, node):
@@ -122,34 +123,44 @@ class TypeChecker(NodeVisitor):
         matrix = self.table.get(node.matrix_name)
 
         if matrix is None or not isinstance(matrix, MatrixSymbol):
-            print("Error: Variable {} is not a matrix, line {}".format(node.matrix_name, node.line))
+            print("Error: Variable {} is not a matrix, line {}"
+                  .format(node.matrix_name, node.line))
             return None
 
         if isinstance(node.index, entities.MatrixIndexes):
+
             if matrix.columns > 1:
-                print("Error: Cannot access 2D matrix {} with only one index, line {}".format(node.matrix_name,
-                                                                                              node.line))
+                print("Error: Cannot access 2D matrix {} with only one index, line {}"
+                      .format(node.matrix_name, node.line))
                 return None
             return node
+
         else:
+
             if matrix.columns == 1 and node.index.row is not None:
-                print("Cannot access 1D matrix {} with two indexes, line {}".format(node.matrix_name, node.line))
+                print("Cannot access 1D matrix {} with two indexes, line {}"
+                      .format(node.matrix_name, node.line))
                 return None
 
         try:
-
             columns = self.visit(node.index.dim_index)
+
             if columns >= matrix.columns:
-                print("Error: Index {} out of matrix bounds, line {}".format(columns, node.line))
+                print("Error: Index {} out of matrix bounds, line {}"
+                      .format(columns, node.line))
                 return None
 
             rows = self.visit(node.index.index)
+
             if rows >= matrix.rows:
-                print("Error: Index {} out of matrix bounds, line {}".format(rows, node.line))
+                print("Error: Index {} out of matrix bounds, line {}"
+                      .format(rows, node.line))
                 return None
+
             return node
         except TypeError:
-            print("Error: Invalid matrix index, line {}".format(node.line))
+            print("Error: Invalid matrix index, line {}"
+                  .format(node.line))
             return None
 
     def visit_MatrixInit(self, node):
@@ -189,50 +200,190 @@ class TypeChecker(NodeVisitor):
 
         if left is None:
             left = self.visit(node.left)
+
             if isinstance(node.left, entities.MatrixInit):
                 matrix1_rows = self.rows
                 matrix1_columns = self.elements / self.rows
 
         if right is None:
             right = self.visit(node.right)
+
             if isinstance(node.right, entities.MatrixInit):
                 matrix2_rows = self.rows
                 matrix2_columns = self.elements / self.rows
 
-        if isinstance(left, VariableSymbol) or isinstance(left, int) or isinstance(left, float):
-            if isinstance(right, VariableSymbol) or isinstance(right, int) or isinstance(right, float):
-                if node.operator == ".*" or node.operator == "./" or node.operator == ".+" or node.operator == ".-":
-                    print("Error: Invalid operation {} for numeric types, line {}".format(node.operator, node.line))
-                else:
-                    if node.operator != "==" and node.operator != "!=" and node.operator != "*" and node.operator != "/":
-                        print("Error: Invalid operation {} for numeric-matrix types, line {}".format(node.operator,
-                                                                                                     node.line))
-        else:
-            if isinstance(right, VariableSymbol) or isinstance(right, int) or isinstance(right, float):
-                if node.operator != "==" and node.operator != "!=":
-                    print("Error: Invalid operation {} for matrix-numeric types, line {}".format(node.operator,
-                                                                                                 node.line))
+        if right is None or left is None:
+            print("Error: Undefined variable, line {}".format(node.line))
+            return None
+        if isinstance(right, entities.BinaryExpr) or isinstance(left, entities.BinaryExpr):
+            return node
+
+        if isinstance(left, VariableSymbol) \
+                or isinstance(left, int) \
+                or isinstance(left, float):
+
+            if isinstance(right, VariableSymbol) \
+                    or isinstance(right, int) \
+                    or isinstance(right, float):
+
+                if node.operator == ".*" \
+                        or node.operator == "./" \
+                        or node.operator == ".+" \
+                        or node.operator == ".-":
+                    print("Error: Invalid operation {} for numeric types, line {}"
+                          .format(node.operator, node.line))
             else:
-                if node.operator != "==" and node.operator != "!=" and node.operator != ".+" and node.operator != ".-" \
-                        and node.operator != ".*" and node.operator != "./":
-                    print("Error: Invalid operation {} for matrix types, line {}".format(node.operator, node.line))
+
+                if node.operator != "==" \
+                        and node.operator != "!=" \
+                        and node.operator != "*" \
+                        and node.operator != "/":
+                    print(right)
+                    print(left)
+                    print("Error: Invalid operation {} for numeric-matrix types, line {}"
+                          .format(node.operator, node.line))
+        else:
+
+            if isinstance(right, VariableSymbol) \
+                    or isinstance(right, int) \
+                    or isinstance(right, float):
+
+                if node.operator != "==" \
+                        and node.operator != "!=":
+                    print("Error: Invalid operation {} for matrix-numeric types, line {}"
+                          .format(node.operator, node.line))
+            else:
+
+                if node.operator != "==" \
+                        and node.operator != "!=" \
+                        and node.operator != ".+" \
+                        and node.operator != ".-" \
+                        and node.operator != ".*" \
+                        and node.operator != "./":
+                    print("Error: Invalid operation {} for matrix types, line {}"
+                          .format(node.operator, node.line))
                     return None
 
-                if isinstance(left, entities.ZerosMatrixInit) or isinstance(left, entities.OnesMatrixInit) or isinstance(left,
-                    entities.EyeMatrixInit):
+                if isinstance(left, entities.ZerosMatrixInit) \
+                        or isinstance(left, entities.OnesMatrixInit) \
+                        or isinstance(left, entities.EyeMatrixInit):
                     matrix1_columns = left.columns
                     matrix1_rows = left.rows
-                if isinstance(right, entities.ZerosMatrixInit) or isinstance(right,
-                  entities.OnesMatrixInit) or isinstance(right,  entities.EyeMatrixInit):
+
+                if isinstance(right, entities.ZerosMatrixInit) \
+                        or isinstance(right, entities.OnesMatrixInit) \
+                        or isinstance(right, entities.EyeMatrixInit):
                     matrix2_columns = right.columns
                     matrix2_rows = right.rows
 
-                if node.operator == ".+" or node.operator == ".-":
-                    if matrix1_columns != matrix2_columns or matrix1_rows != matrix2_rows:
-                        print("Error: Incompatible matrix sizes for operation {}, line {}".format(node.operator, node.line))
+                if node.operator == ".+" \
+                        or node.operator == ".-":
+
+                    if matrix1_columns != matrix2_columns \
+                            or matrix1_rows != matrix2_rows:
+                        print("Error: Incompatible matrix sizes for operation {}, line {}"
+                              .format(node.operator, node.line))
+
                 elif node.operator == ".*" or node.operator == "./":
+
                     if matrix1_columns != matrix2_rows:
-                        print("Error: Incompatible matrix sizes  for operation {}, line {}".format(node.operator,
-                                                                                                  node.line))
+                        print("Error: Incompatible matrix sizes  for operation {}, line {}"
+                              .format(node.operator, node.line))
+
+        return node
+
+    def visit_RangeExpression(self, node):
+
+        from_expr = self.visit(node.expression1)
+        to_expr = self.visit(node.expression2)
+
+        if isinstance(from_expr, int) \
+                and isinstance(to_expr, int) \
+                and from_expr > to_expr:
+            print("Error: Range start limit {} cannot be larger than its end limit {}, line {}".
+                  format(from_expr, to_expr, node.line))
+            return None
+
+        if not isinstance(from_expr, int) \
+                and not isinstance(from_expr, entities.BinaryExpr):
+            print(from_expr)
+
+            print("Error: Range start limit should not be a matrix, line {}"
+                  .format(node.line))
+            return None
+
+        if not isinstance(to_expr, int) \
+                and not isinstance(to_expr, entities.BinaryExpr):
+            print(to_expr)
+            print(from_expr)
+            print("Error: Range end limit should not be a matrix, line {}"
+                  .format(node.line))
+            return None
+
+        if isinstance(from_expr, entities.BinaryExpr) \
+                and from_expr.operator != "+" and from_expr.operator != "-" \
+                and from_expr.operator != "*" and from_expr.operator != "/":
+            print("Error: Wrong binary operation used in range expression, line {}"
+                  .format(node.line))
+            return None
+
+        if isinstance(to_expr, entities.BinaryExpr) \
+                and to_expr.operator != "+" and to_expr.operator != "-" \
+                and to_expr.operator != "*" and to_expr.operator != "/":
+            print("Error: Wrong binary operation used in range expression, line {}"
+                  .format(node.line))
+            return None
+
+        return node
+
+    def visit_ForInstruction(self, node):
+
+        range_expression = self.visit(node.range_expression)
+
+        if not isinstance(range_expression, entities.RangeExpression):
+            print("Error: The for condition should be a range, line {}"
+                  .format(node.line))
+            return None
+
+        self.table.put(str(range_expression.my_id),
+                       VariableSymbol('=', range_expression.expression1))
+
+        self.is_in_loop = True
+        self.visit(node.braced_expression)
+        self.is_in_loop = False
+
+        return node
+
+    def visit_WhileInstruction(self, node):
+
+        self.visit(node.expression)
+
+        self.is_in_loop = True
+        self.visit(node.braced_expression)
+        self.is_in_loop = False
+
+        return node
+
+    def visit_LoopControlInstruction(self, node):
+        if not self.is_in_loop:
+            print("Error: Loop Control instruction outside a loop, line {}"
+                  .format(node.line))
+
+    def visit_IfInstruction(self, node):
+        expression = self.visit(node.expression)
+        if isinstance(expression, entities.BinaryExpr) \
+                and not (expression.operator == '=='
+                         or expression.operator == '!='
+                         or expression.operator == '<'
+                         or expression.operator == '>'
+                         or expression.operator == '<='
+                         or expression.operator == '>='):
+            print("Error: Invalid operation used in if instruction, line {}".format(node.line))
+            return None
+
+        self.visit(node.instructions)
+
+        if node.else_if_instructions is not None:
+            self.visit(node.else_if_instructions)
 
         return node
