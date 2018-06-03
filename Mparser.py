@@ -109,9 +109,9 @@ def p_array_ref_rec(p):
 
 
 def p_expression(p):
-    """expression : variable
+    """expression : unary_expr
+                  | variable
                   | constant
-                  | unary_expr
                   | binary_expr
                   | matrix_init
     """
@@ -121,20 +121,18 @@ def p_expression(p):
 def p_constant(p):
     """constant : INT
                 | FLOAT
+                | STRING
     """
-    p[0] = p[1]
+    if isinstance(p[1], int):
+        p[0] = entities.Int(p[1], p.lineno(1))
+        return
+    if isinstance(p[1], float):
+        p[0] = entities.Float(p[1], p.lineno(1))
+        return
+    p[0] = entities.String(p[1], p.lineno(1))
 
 
-def p_unary_minus(p):
-    """unary_expr : '-' expression
-    """
-    p[0] = entities.UnaryExpr(p[1], p[2], p.lineno(1))
 
-
-def p_unary_transp(p):
-    """unary_expr : expression TRANSP
-    """
-    p[0] = entities.UnaryExpr(p[2], p[1], p.lineno(1))
 
 
 def p_binary_expr(p):
@@ -155,6 +153,16 @@ def p_binary_expr(p):
     """
     p[0] = entities.BinaryExpr(p[1], p[2], p[3], p.lineno(2))
 
+def p_unary_minus(p):
+    """unary_expr : '-' expression
+    """
+    p[0] = entities.UnaryExpr(p[1], p[2], p.lineno(1))
+
+
+def p_unary_transp(p):
+    """unary_expr : expression TRANSP
+    """
+    p[0] = entities.UnaryExpr(p[2], p[1], p.lineno(1))
 
 def p_matrix_zeros_square_init(p):
     """matrix_init : ZEROS '(' expression ')'
@@ -195,7 +203,6 @@ def p_rows(p):
     """rows : row ';' rows
     """
     p[0] = entities.MatrixVector(p[1], p[3], p.lineno(1))
-
 
 def p_rows1(p):
     """rows : row

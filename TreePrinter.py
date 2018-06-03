@@ -57,6 +57,18 @@ class TreePrinter:
         res = indent_symbol * indent + self.value + '\n'
         return res
 
+    @addToClass(entities.Int)
+    def printTree(self, indent=0):
+        return indent * indent_symbol + str(self.value) + "\n"
+
+    @addToClass(entities.Float)
+    def printTree(self, indent=0):
+        return indent * indent_symbol + str(self.value) + "\n"
+
+    @addToClass(entities.String)
+    def printTree(self, indent=0):
+        return indent * indent_symbol + str(self.value) + "\n"
+
     @addToClass(entities.ArrayRef)
     def printTree(self, indent=0):
         res = indent_symbol * indent + 'REF\n'
@@ -287,7 +299,4 @@ class TreePrinter:
             res += indent_symbol * (indent + 1) + str(self.expression2) + '\n'
         return res
 
-    @addToClass(entities.Error)
-    def printTree(self, indent=0):
-        pass
-        # fill in the body
+

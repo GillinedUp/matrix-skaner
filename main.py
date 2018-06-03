@@ -4,6 +4,8 @@ from scanner import lexer
 from TreePrinter import TreePrinter
 from TypeChecker import TypeChecker
 from io import StringIO
+from Interpreter import Interpreter
+
 
 debug = False
 
@@ -34,7 +36,7 @@ def test_parser():
 
 def run():
     try:
-        filename = sys.argv[1] if len(sys.argv) > 1 else "example3"
+        filename = sys.argv[1] if len(sys.argv) > 1 else "example.txt"
         file = open(filename, "r")
     except IOError:
         print("Cannot open {0} file".format(filename))
@@ -48,6 +50,12 @@ def run():
     typeChecker = TypeChecker()
     typeChecker.visit(ast)  # or alternatively ast.accept(typeChecker)
     print('Checked')
+
+    ast.accept(Interpreter())
+    # in future
+    # ast.accept(OptimizationPass1())
+    # ast.accept(OptimizationPass2())
+    # ast.accept(CodeGenerator())
 
 
 if __name__ == '__main__':

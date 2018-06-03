@@ -26,12 +26,12 @@ tokens = [
              'ID',
              'INT',
              'FLOAT',
-             'STRING',
              'EQUAL',
              'NOTEQUAL',
-             'TRANSP',
              'LESSEQUAL',
              'GREATEREQUAL',
+             'TRANSP',
+             'STRING',
 
          ] + list(keywords.values())
 

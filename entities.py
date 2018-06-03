@@ -3,6 +3,9 @@ class Node(object):
         self.instructions = instructions
         self.line = line
 
+    def accept(self, visitor):
+        return visitor.visit(self)
+
 
 class Instructions(Node):
     def __init__(self, instructions, instruction, line):
@@ -24,6 +27,24 @@ class Assign(Node):
         self.variable = variable
         self.assign_op = assign_op
         self.expression = expression
+        self.line = line
+
+
+class Int(Node):
+    def __init__(self, value, line):
+        self.value = value
+        self.line = line
+
+
+class Float(Node):
+    def __init__(self, value, line):
+        self.value = value
+        self.line = line
+
+
+class String(Node):
+    def __init__(self, value, line):
+        self.value = value
         self.line = line
 
 
@@ -107,7 +128,7 @@ class MatrixVector(Node):
     def __init__(self, rows, row, line):
         self.rows = rows
         self.row = row
-        self.line = line;
+        self.line = line
 
 
 class LoopControlInstruction(Node):
@@ -164,7 +185,3 @@ class RangeExpression(Node):
         self.expression2 = expression2
         self.line = line
 
-
-class Error(Node):
-    def __init__(self):
-        pass
