@@ -61,8 +61,8 @@ class TypeChecker(NodeVisitor):
                 self.table.put(str(node.variable.value),
                                MatrixSymbol(node.assign_op,
                                             node.expression,
-                                            self.rows,
-                                            self.elements // self.rows))
+                                            self.elements // self.rows,
+                                            self.rows))
             elif not isinstance(node.variable, entities.ArrayRef):
                 self.table.put(str(node.variable.value),
                                VariableSymbol(node.assign_op, node.expression))
@@ -116,7 +116,8 @@ class TypeChecker(NodeVisitor):
 
         else:
             if isinstance(exp, MatrixSymbol):
-                transp = MatrixSymbol(node.operator, exp.value, exp.columns, exp.rows)
+                transp = MatrixSymbol(node.operator, exp.value, exp.rows, exp.columns)
+                # print("transp: " + str(node.expression.value) + " rows: " + str(transp.rows) + " columns: " + str(transp.columns))
                 return transp
             return 'TRANSP'
 

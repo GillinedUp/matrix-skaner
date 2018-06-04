@@ -51,7 +51,7 @@ def run():
     typeChecker.visit(ast)  # or alternatively ast.accept(typeChecker)
     print('Checked')
 
-    ast.accept(Interpreter())
+    # ast.accept(Interpreter())
     # in future
     # ast.accept(OptimizationPass1())
     # ast.accept(OptimizationPass2())

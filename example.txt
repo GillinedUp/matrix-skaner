@@ -1,7 +1,7 @@
-A = [1,2; 3,4; 3,4]; # create 5x5 matrix filled with zeros
-B = [1,2, 9; 4, 5, 0];  # create 7x7 matrix filled with ones
+A = [1, 2 ; 4, 5 ; 9, 0]; # create 5x5 matrix filled with zeros
+B = [1, 2, 8 ; 4, 5,  9];  # create 7x7 matrix filled with ones
 I = eye(10);  # create 10x10 matrix filled with ones on diagonal and zeros elsewhere
-D1 = A.+ B' ;  # add element-wise A with transpose of B
+D1 = A.+ B ;  # add element-wise A with transpose of B
 D2 -= A.-B' ; # subtract element-wise A with transpose of B
 D3 *= A.*B' ; # multiply element-wise A with transpose of B
 D4 /= A./B' ; # divide element-wise A with transpose of B

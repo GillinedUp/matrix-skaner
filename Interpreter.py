@@ -151,21 +151,26 @@ class Interpreter(object):
     def visit(self, node):
         matrixArray = []
         mat = node.rows
+        rows = mat.rows
+
+        if rows is None:
+            rows = mat.row
 
         while True:
-
-            rows = mat.rows
-            if rows is None:
-                rows = mat.row
             row = []
 
             while rows.row is not None:
                 row.append(rows.row.accept(self))
                 rows = rows.rows
+                print("rows " + str(rows))
                 if rows is None:
                     break
 
             mat = mat.row
+            print("mat " + str(mat))
+
+            print("row list : " )
+            print(row)
             matrixArray.append(row[::-1])
 
             if mat is None:
@@ -173,6 +178,12 @@ class Interpreter(object):
 
             if not hasattr(mat, 'rows'):
                 break
+
+            rows = mat.rows
+            # if rows is None:
+            #     rows = mat.row
+
+
 
         print(matrixArray)
         return np.array(matrixArray)
