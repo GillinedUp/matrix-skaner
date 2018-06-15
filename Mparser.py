@@ -121,7 +121,7 @@ def p_expression(p):
 def p_constant(p):
     """constant : INT
                 | FLOAT
-                | STRING
+
     """
     if isinstance(p[1], int):
         p[0] = entities.Int(p[1], p.lineno(1))
@@ -129,7 +129,6 @@ def p_constant(p):
     if isinstance(p[1], float):
         p[0] = entities.Float(p[1], p.lineno(1))
         return
-    p[0] = entities.String(p[1], p.lineno(1))
 
 
 

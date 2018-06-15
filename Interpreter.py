@@ -57,15 +57,11 @@ class Interpreter(object):
 
     @visitor.when(entities.Instructions)
     def visit(self, node):
-        print(node)
-
         for instruction in node.instructions:
             instruction.accept(self)
 
     @visitor.when(entities.BracedInstructions)
     def visit(self, node):
-        print(node)
-
         node.instructions.accept(self)
 
     @visitor.when(entities.Int)
@@ -82,7 +78,8 @@ class Interpreter(object):
 
     @visitor.when(entities.Assign)
     def visit(self, node):
-        print("Variable assignment:  " + str(node.variable.value) + " with value: " + str(node.expression))
+        print("Variable assignment:  " + str(node.variable.value) + " with value: ")
+        print(node.expression.accept(self))
         if self.stack.get(str(node.variable.value)) is None:
             self.stack.insert(str(node.variable.value), node.expression.accept(self))
         else:
@@ -150,40 +147,34 @@ class Interpreter(object):
     @visitor.when(entities.MatrixInit)
     def visit(self, node):
         matrixArray = []
-        mat = node.rows
-        rows = mat.rows
-
-        if rows is None:
-            rows = mat.row
+        rows = node.rows
 
         while True:
-            row = []
+            cur_row = []
 
-            while rows.row is not None:
-                row.append(rows.row.accept(self))
-                rows = rows.rows
-                print("rows " + str(rows))
-                if rows is None:
+            row = rows.rows
+
+            while row is not None and row.row is not None:
+                res = row.row.accept(self)
+                cur_row.append(res)
+                row = row.rows
+                if row is None:
                     break
 
-            mat = mat.row
-            print("mat " + str(mat))
+            rows = rows.row
 
-            print("row list : " )
-            print(row)
-            matrixArray.append(row[::-1])
-
-            if mat is None:
+            if not hasattr(rows, "rows"):
+                res = rows.accept(self)
+                cur_row = cur_row[::-1]
+                cur_row.append(res)
+                matrixArray.append(cur_row)
                 break
 
-            if not hasattr(mat, 'rows'):
-                break
+            if len(cur_row) > 0:
+                matrixArray.append(cur_row[::-1])
 
-            rows = mat.rows
-            # if rows is None:
-            #     rows = mat.row
-
-
-
-        print(matrixArray)
         return np.array(matrixArray)
+
+
+
+

@@ -198,6 +198,7 @@ class TypeChecker(NodeVisitor):
         self.rowsLengths[self.rows] += 1
         self.elements += 1
 
+
     def visit_MatrixIndexes(self, node):
         return self.visit(node.index)
 

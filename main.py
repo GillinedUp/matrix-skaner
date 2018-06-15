@@ -36,7 +36,7 @@ def test_parser():
 
 def run():
     try:
-        filename = sys.argv[1] if len(sys.argv) > 1 else "example.txt"
+        filename = sys.argv[1] if len(sys.argv) > 1 else "ex1"
         file = open(filename, "r")
     except IOError:
         print("Cannot open {0} file".format(filename))
@@ -51,7 +51,7 @@ def run():
     typeChecker.visit(ast)  # or alternatively ast.accept(typeChecker)
     print('Checked')
 
-    # ast.accept(Interpreter())
+    ast.accept(Interpreter())
     # in future
     # ast.accept(OptimizationPass1())
     # ast.accept(OptimizationPass2())
