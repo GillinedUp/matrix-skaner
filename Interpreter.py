@@ -18,6 +18,10 @@ def calculateNumeric(x):
         '/': lambda left, right: left / right,
         '==': lambda left, right: left == right,
         '!=': lambda left, right: left != right,
+        '<': lambda left, right: left < right,
+        '>': lambda left, right: left > right,
+        '>=': lambda left, right: left >= right,
+        '<=': lambda left, right: left <= right,
     }[x]
 
 
