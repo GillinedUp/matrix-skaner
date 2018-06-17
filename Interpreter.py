@@ -85,6 +85,13 @@ class Interpreter(object):
     def visit(self, node):
         return node.value
 
+    @visitor.when(entities.Variable)
+    def visit(self, node):
+        if self.stack.get(node) is not None:
+            return self.stack.get(node)
+        else:
+            return None
+
     @visitor.when(entities.BinaryExpr)
     def visit(self, node):
 

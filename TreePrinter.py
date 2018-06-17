@@ -230,16 +230,17 @@ class TreePrinter:
 
     @addToClass(entities.StringExpressions)
     def printTree(self, indent=0):
-        res = ""
+        if issubclass(self.string_expressions[0].__class__, entities.Node):
 
-        if self.string_expressions is not None:
-            res += self.string_expressions.printTree(indent)
-
-        if issubclass(self.string_expression.__class__, entities.Node):
-            res += self.string_expression.printTree(indent)
+            res = self.string_expressions[0].printTree(indent)
         else:
-            res += indent * indent_symbol + str(self.string_expression) + '\n'
+            res = indent * indent_symbol + str(self.string_expressions[0]) + '\n'
 
+        for s in range(1, len(self.string_expressions)):
+            if issubclass(self.string_expressions[s].__class__, entities.Node):
+                res += self.string_expressions[s].printTree(indent)
+            else:
+                res += indent * indent_symbol + str(self.string_expressions[s]) + '\n'
         return res
 
     @addToClass(entities.IfInstruction)

@@ -35,6 +35,7 @@ def test_parser():
 
 
 def run():
+    filename = None
     try:
         filename = sys.argv[1] if len(sys.argv) > 1 else "ex1"
         file = open(filename, "r")
