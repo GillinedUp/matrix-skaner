@@ -121,7 +121,6 @@ class TypeChecker(NodeVisitor):
                 return transp
             return 'TRANSP'
 
-
     def visit_Variable(self, node):
         try:
             return self.visit((self.table.get(node.value)).value)
@@ -197,7 +196,6 @@ class TypeChecker(NodeVisitor):
         self.visit(node.row)
         self.rowsLengths[self.rows] += 1
         self.elements += 1
-
 
     def visit_MatrixIndexes(self, node):
         return self.visit(node.index)
@@ -285,7 +283,6 @@ class TypeChecker(NodeVisitor):
                           .format(node.operator, node.line))
                     return None
 
-
                 if isinstance(left, entities.ZerosMatrixInit) \
                         or isinstance(left, entities.OnesMatrixInit) \
                         or isinstance(left, entities.EyeMatrixInit):
@@ -330,7 +327,6 @@ class TypeChecker(NodeVisitor):
         from_expr = self.visit(node.expression1)
         to_expr = self.visit(node.expression2)
 
-
         if isinstance(from_expr, entities.Int) \
                 and isinstance(to_expr, entities.Int) \
                 and from_expr.value > to_expr.value:
@@ -345,7 +341,7 @@ class TypeChecker(NodeVisitor):
             return None
 
         if not isinstance(to_expr, entities.Int) \
-                and not isinstance(to_expr, entities.BinaryExpr)\
+                and not isinstance(to_expr, entities.BinaryExpr) \
                 and not isinstance(to_expr, int):
             print("Error: Range end limit should not be a matrix, line {}"
                   .format(node.line))

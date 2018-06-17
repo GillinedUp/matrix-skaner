@@ -52,10 +52,6 @@ def run():
     print('Checked')
 
     ast.accept(Interpreter())
-    # in future
-    # ast.accept(OptimizationPass1())
-    # ast.accept(OptimizationPass2())
-    # ast.accept(CodeGenerator())
 
 
 if __name__ == '__main__':

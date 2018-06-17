@@ -150,10 +150,18 @@ class PrintInstruction(Node):
 
 
 class StringExpressions(Node):
-    def __init__(self, string_expressions, string_expression, line):
-        self.string_expressions = string_expressions
+    def __init__(self, line):
+        self.string_expressions = []
+        self.line = line
+
+
+class StringExpression(Node):
+    def __init__(self, string_expression, line):
         self.string_expression = string_expression
         self.line = line
+
+    def __str__(self):
+        return self.string_expression
 
 
 class IfInstruction(Node):

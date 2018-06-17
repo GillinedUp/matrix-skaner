@@ -131,9 +131,6 @@ def p_constant(p):
         return
 
 
-
-
-
 def p_binary_expr(p):
     """binary_expr : expression '+' expression
                    | expression '-' expression
@@ -152,6 +149,7 @@ def p_binary_expr(p):
     """
     p[0] = entities.BinaryExpr(p[1], p[2], p[3], p.lineno(2))
 
+
 def p_unary_minus(p):
     """unary_expr : '-' expression
     """
@@ -162,6 +160,7 @@ def p_unary_transp(p):
     """unary_expr : expression TRANSP
     """
     p[0] = entities.UnaryExpr(p[2], p[1], p.lineno(1))
+
 
 def p_matrix_zeros_square_init(p):
     """matrix_init : ZEROS '(' expression ')'
@@ -202,6 +201,7 @@ def p_rows(p):
     """rows : row ';' rows
     """
     p[0] = entities.MatrixVector(p[1], p[3], p.lineno(1))
+
 
 def p_rows1(p):
     """rows : row
@@ -248,20 +248,23 @@ def p_print_instruction(p):
 def p_string_expressions(p):
     """string_expressions : string_expressions ',' string_expression
     """
-    p[0] = entities.StringExpressions(p[1], p[3], p.lineno(1))
+    p[0] = entities.StringExpressions(p.lineno(1))
+    p[0].string_expressions.append(p[1])
+    p[0].string_expressions.append(p[3])
 
 
 def p_string_expressions_single(p):
     """string_expressions : string_expression
     """
-    p[0] = entities.StringExpressions(None, p[1], p.lineno(1))
+    p[0] = entities.StringExpressions(p.lineno(1))
+    p[0].string_expressions.append(p[1])
 
 
 def p_string_expression(p):
     """string_expression : STRING
                          | expression
     """
-    p[0] = entities.StringExpressions(None, p[1], p.lineno(1))
+    p[0] = entities.StringExpression(p[1], p.lineno(1))
 
 
 def p_if_instruction(p):

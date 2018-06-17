@@ -16,7 +16,6 @@ class MatrixSymbol:
 
 
 class SymbolTable(object):
-
     def __init__(self, parent, name):  # parent scope and symbol table name
         self.parent = parent
         self.name = name

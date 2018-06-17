@@ -64,18 +64,6 @@ class Interpreter(object):
     def visit(self, node):
         node.instructions.accept(self)
 
-    @visitor.when(entities.Int)
-    def visit(self, node):
-        return node.value
-
-    @visitor.when(entities.String)
-    def visit(self, node):
-        return node.value
-
-    @visitor.when(entities.Float)
-    def visit(self, node):
-        return node.value
-
     @visitor.when(entities.Assign)
     def visit(self, node):
         print("Variable assignment:  " + str(node.variable.value) + " with value: ")
@@ -84,6 +72,18 @@ class Interpreter(object):
             self.stack.insert(str(node.variable.value), node.expression.accept(self))
         else:
             self.stack.set(str(node.variable.value), node.expression.accept(self))
+
+    @visitor.when(entities.Int)
+    def visit(self, node):
+        return node.value
+
+    @visitor.when(entities.Float)
+    def visit(self, node):
+        return node.value
+
+    @visitor.when(entities.String)
+    def visit(self, node):
+        return node.value
 
     @visitor.when(entities.BinaryExpr)
     def visit(self, node):
@@ -175,6 +175,84 @@ class Interpreter(object):
 
         return np.array(matrixArray)
 
+    @visitor.when(entities.LoopControlInstruction)
+    def visit(self, node):
+        if node.loop_control == "break":
+            raise BreakException()
+        elif node.loop_control == "continue":
+            raise ContinueException()
 
+    @visitor.when(entities.ReturnInstruction)
+    def visit(self, node):
+        raise ReturnValueException(node.expression.accept(self))
 
+    @visitor.when(entities.StringExpression)
+    def visit(self, node):
+        string_expression = node.string_expression.accept(self)
+        if isinstance(string_expression, str):
+            return string_expression.replace('"', "")
+        return string_expression
 
+    @visitor.when(entities.StringExpressions)
+    def visit(self, node):
+        string = ""
+        for s in node.string_expressions:
+            string += str(s.accept(self))
+
+        return string
+
+    @visitor.when(entities.PrintInstruction)
+    def visit(self, node):
+        string_expressions = node.string_expressions.accept(self)
+        print(string_expressions)
+        return string_expressions
+
+    @visitor.when(entities.IfInstruction)
+    def visit(self, node):
+        self.stack.push(Memory("if"))
+        if node.expression.accept(self):
+            node.instructions.accept(self)
+        elif node.else_if_instructions is not None:
+            node.else_if_instructions.accept(self)
+        self.stack.pop()
+
+    @visitor.when(entities.WhileInstruction)
+    def visit(self, node):
+        result = None
+        self.stack.push(Memory("while"))
+        while node.expression.accept(self):
+            try:
+                result = node.braced_expression.accept(self)
+            except ContinueException:
+                continue
+            except BreakException:
+                break
+
+        self.stack.pop()
+        return result
+
+    @visitor.when(entities.RangeExpression)
+    def visit(self, node):
+        start = node.expression1.accept(self)
+        end = node.expression2.accept(self)
+        range_expression = range(start, end)
+
+        if self.stack.get(str(node.my_id)) is None:
+            self.stack.insert(str(node.my_id), range_expression)
+        else:
+            self.stack.set(str(node.my_id), range_expression)
+
+        return range_expression
+
+    @visitor.when(entities.ForInstruction)
+    def visit(self, node):
+        self.stack.push(Memory("for"))
+        for _ in node.range_expression.accept(self):
+            try:
+                node.braced_expression.accept(self)
+            except ContinueException:
+                continue
+            except BreakException:
+                break
+
+        self.stack.pop()
