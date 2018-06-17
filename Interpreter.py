@@ -62,7 +62,8 @@ class Interpreter(object):
 
     @visitor.when(entities.BracedInstructions)
     def visit(self, node):
-        node.instructions.accept(self)
+        for instruction in node.instructions:
+            instruction.accept(self)
 
     @visitor.when(entities.Assign)
     def visit(self, node):
@@ -195,16 +196,16 @@ class Interpreter(object):
 
     @visitor.when(entities.StringExpression)
     def visit(self, node):
-        string_expression = node.string_expression.accept(self)
+        string_expression = node.string_expression
         if isinstance(string_expression, str):
             return string_expression.replace('"', "")
-        return string_expression
+        return string_expression.accept(self)
 
     @visitor.when(entities.StringExpressions)
     def visit(self, node):
         string = ""
         for s in node.string_expressions:
-            string += str(s.accept(self))
+            string += str(s.accept(self)) + " "
 
         return string
 
@@ -243,19 +244,18 @@ class Interpreter(object):
         start = node.expression1.accept(self)
         end = node.expression2.accept(self)
         range_expression = range(start, end)
-
-        if self.stack.get(str(node.my_id)) is None:
-            self.stack.insert(str(node.my_id), range_expression)
-        else:
-            self.stack.set(str(node.my_id), range_expression)
-
-        return range_expression
+        return node.my_id, range_expression
 
     @visitor.when(entities.ForInstruction)
     def visit(self, node):
         self.stack.push(Memory("for"))
-        for _ in node.range_expression.accept(self):
+        my_id, range_expression = node.range_expression.accept(self)
+        for val in range_expression:
             try:
+                if self.stack.get(str(my_id)) is None:
+                    self.stack.insert(str(my_id), val)
+                else:
+                    self.stack.set(str(my_id), val)
                 node.braced_expression.accept(self)
             except ContinueException:
                 continue
