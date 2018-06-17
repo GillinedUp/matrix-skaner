@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import entities
-from SymbolTable import SymbolTable, MatrixSymbol, VariableSymbol
+from SymbolTable import SymbolTable, MatrixSymbol, VariableSymbol, BinSymbol
 
 
 class NodeVisitor(object):
@@ -63,6 +63,9 @@ class TypeChecker(NodeVisitor):
                                             node.expression,
                                             self.elements // self.rows,
                                             self.rows))
+            elif isinstance(assignments, entities.BinaryExpr):
+                self.table.put(str(node.variable.value),
+                               BinSymbol(node.assign_op, node.expression))
             elif not isinstance(node.variable, entities.ArrayRef):
                 self.table.put(str(node.variable.value),
                                VariableSymbol(node.assign_op, node.expression))
@@ -249,18 +252,21 @@ class TypeChecker(NodeVisitor):
 
                 if node.operator != "==" \
                         and node.operator != "!=" \
-                        and node.operator != "*" \
-                        and node.operator != "/":
-                    print(node.left)
-                    print(node.right)
+                        and node.operator != ".+" \
+                        and node.operator != ".-" \
+                        and node.operator != ".*"\
+                        and node.operator != "./":
+                    # print(node.left)
+                    # print(node.right)
                     print("Error: Invalid operation {} for numeric-matrix types, line {}"
                           .format(node.operator, node.line))
-        elif not isinstance(left, str):
+        elif not isinstance(left, str) and not isinstance(left, BinSymbol) and not isinstance(right, BinSymbol):
 
             if isinstance(left, entities.UnaryExpr):
                 left = self.visit(left)
             if isinstance(right, entities.UnaryExpr):
                 right = self.visit(right)
+
             if isinstance(right, str):
                 return node
 
@@ -269,16 +275,20 @@ class TypeChecker(NodeVisitor):
                     or isinstance(right, entities.Float):
 
                 if node.operator != "==" \
-                        and node.operator != "!=":
-                    print("Error: Invalid operation {} for matrix-numeric types, line {}"
-                          .format(node.operator, node.line))
-            else:
-                if node.operator != "==" \
                         and node.operator != "!=" \
                         and node.operator != ".+" \
                         and node.operator != ".-" \
                         and node.operator != ".*" \
                         and node.operator != "./":
+
+                    print("Error: Invalid operation {} for matrix-numeric types, line {}"
+                          .format(node.operator, node.line))
+            else:
+                if node.operator == ">" \
+                        or node.operator == "<" \
+                        or node.operator == ">=" \
+                        or node.operator == "<=":
+
                     print("Error: Invalid operation {} for matrix types, line {}"
                           .format(node.operator, node.line))
                     return None
@@ -305,7 +315,11 @@ class TypeChecker(NodeVisitor):
                     matrix2_rows = right.rows
 
                 if node.operator == ".+" \
-                        or node.operator == ".-":
+                        or node.operator == ".-"\
+                        or node.operator == "+"\
+                        or node.operator == "-"\
+                        or node.operator == ".*"\
+                        or node.operator == "./":
 
                     if matrix1_columns != matrix2_columns \
                             or matrix1_rows != matrix2_rows:
@@ -313,7 +327,7 @@ class TypeChecker(NodeVisitor):
                               .format(matrix1_rows, matrix1_columns, matrix2_rows, matrix2_columns,
                                       node.operator, node.line))
 
-                elif node.operator == ".*" or node.operator == "./":
+                elif node.operator == "*" or node.operator == "/":
 
                     if matrix1_columns != matrix2_rows:
                         print("Error: Incompatible matrix sizes: {}x{} and  {}x{} for operation {}, line {}"

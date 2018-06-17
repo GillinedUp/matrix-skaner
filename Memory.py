@@ -24,18 +24,18 @@ class MemoryStack:
         self.err = -1
 
     def get(self, name):  # gets from memory stack current value of variable <name>
-        if not isinstance(name, entities.Variable):
-            return None
+        str_name = name
+        if  isinstance(name, entities.Variable):
+            str_name = name.value
 
         for memory in reversed(self.stack):
-            if memory.has_key(name.value):
-                return memory.get(name.value)
+            if memory.has_key(str_name):
+                return memory.get(str_name)
         return None
 
     def insert(self, name, value):  # inserts into memory stack variable <name> with value <value>
         self.stack[-1].put(name, value)
-        # print("Inserted " + str(name) + " with value: ")
-        # print(str(value))
+        print("Inserted " + str(name) + " with value: " + str(value))
 
     def set(self, name, value):  # sets variable <name> to value <value>
         for memory in reversed(self.stack):

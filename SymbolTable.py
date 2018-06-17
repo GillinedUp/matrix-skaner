@@ -7,6 +7,11 @@ class VariableSymbol:
         self.value = value
 
 
+class BinSymbol:
+    def __init__(self, var_type, value):
+        self.type = var_type
+        self.value = value
+
 class MatrixSymbol:
     def __init__(self, m_type, value, columns, rows):
         self.value = value

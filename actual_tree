@@ -74,9 +74,7 @@ FOR
 |  |  |  i
 |  |  |  M
 |  |  PRINT
-|  |  |  i
-|  |  |  j
-WHILE
+|  |  |  |  |  |  WHILE
 |  >
 |  |  k
 |  |  0

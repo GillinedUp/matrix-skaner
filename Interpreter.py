@@ -10,6 +10,16 @@ import numpy as np
 sys.setrecursionlimit(10000)
 
 
+class Indexes:
+    def __init__(self):
+        self.indexes = []
+        self.dim = 0
+
+    def add(self, index):
+        self.indexes.append(index)
+        self.dim += 1
+
+
 def calculateNumeric(x):
     return {
         '+': lambda left, right: left + right,
@@ -27,10 +37,14 @@ def calculateNumeric(x):
 
 def calculateMatrices(x):
     return {
-        '.+': lambda left, right: np.add(left, right),
-        '.-': lambda left, right: np.subtract(left, right),
-        '.*': lambda left, right: np.matmul(left, right),
-        './': lambda left, right: np.divide(left, right),
+        '.+': lambda left, right: left + right,
+        '.-': lambda left, right: left - right,
+        '.*': lambda left, right: left * right,
+        './': lambda left, right: left / right,
+        '+': lambda left, right: np.add(left, right),
+        '-': lambda left, right: np.subtract(left, right),
+        '*': lambda left, right: np.matmul(left, right),
+        '/': lambda left, right: np.divide(left, right),
         '==': lambda left, right: np.array_equal(left, right),
         '!=': lambda left, right: not np.array_equal(left, right),
     }[x]
@@ -38,10 +52,14 @@ def calculateMatrices(x):
 
 def calculateNumericMatrix(x):
     return {
-        '*': lambda left, right: left * right,
-        '/': lambda left, right: left / right,
+        # '*': lambda left, right: left * right,
+        # '/': lambda left, right: left / right,
         '==': lambda left, right: left == right,
         '!=': lambda left, right: left != right,
+        '.*': lambda left, right: left * right,
+        './': lambda left, right: left / right,
+        '.+': lambda left, right: left + right,
+        '.-': lambda left, right: left - right,
     }[x]
 
 
@@ -71,9 +89,28 @@ class Interpreter(object):
 
     @visitor.when(entities.Assign)
     def visit(self, node):
-        print("Variable assignment:  " + str(node.variable.value) + " with value: ")
-        print(node.expression.accept(self))
-        if self.stack.get(str(node.variable.value)) is None:
+        if isinstance(node.variable, entities.ArrayRef):
+            matrix = self.stack.get(node.variable.matrix_name)
+            value = node.expression.accept(self)
+            indexes = node.variable.index.accept(self)
+            if isinstance(indexes, Indexes):
+                dim = indexes.dim
+                index = 0
+                i = 0
+                for ind in indexes.indexes:
+                    elements = 1
+                    for n in matrix.shape[dim - 1 + i:]:
+                        elements *= n
+                    index += elements * ind
+                    i += 1
+
+                np.put(matrix, [index], value)
+                print("Updated " + str(node.variable.matrix_name) + str(indexes.indexes) + " with value " + str(value))
+            else:
+                print("Updated " + str(node.variable.matrix_name) + "[" + str(indexes) + "]" + " with value " + str(
+                    value))
+                matrix[0, indexes] = value
+        elif self.stack.get(str(node.variable.value)) is None:
             self.stack.insert(str(node.variable.value), node.expression.accept(self))
         else:
             self.stack.set(str(node.variable.value), node.expression.accept(self))
@@ -97,6 +134,17 @@ class Interpreter(object):
         else:
             return None
 
+    @visitor.when(entities.MatrixIndexes)
+    def visit(self, node):
+        return node.index.accept(self)
+
+    @visitor.when(entities.MatrixExactIndexes)
+    def visit(self, node):
+        indexes = Indexes()
+        indexes.add(node.dim_index.accept(self))
+        indexes.add(node.index.accept(self))
+        return indexes
+
     @visitor.when(entities.BinaryExpr)
     def visit(self, node):
 
@@ -118,6 +166,9 @@ class Interpreter(object):
         if type(right) is np.ndarray:
             if type(left) is np.ndarray:
                 return calculateMatrices(node.operator)(left, right)
+            return calculateNumericMatrix(node.operator)(left, right)
+
+        if type(left) is np.ndarray:
             return calculateNumericMatrix(node.operator)(left, right)
 
         return calculateNumeric(node.operator)(left, right)

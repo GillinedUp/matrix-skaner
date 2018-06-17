@@ -37,7 +37,7 @@ def test_parser():
 def run():
     filename = None
     try:
-        filename = sys.argv[1] if len(sys.argv) > 1 else "ex1"
+        filename = sys.argv[1] if len(sys.argv) > 1 else "example3"
         file = open(filename, "r")
     except IOError:
         print("Cannot open {0} file".format(filename))
