@@ -186,6 +186,7 @@ class Interpreter(object):
                 expression = node.expression.accept(self)
                 return (-1) * expression
             return (-1) * expression
+    # Klaudia knows what has to be done :)
 
     @visitor.when(entities.ZerosMatrixInit)
     def visit(self, node):
@@ -206,6 +207,7 @@ class Interpreter(object):
         size = node.rows.accept(self)
         matrix = np.eye(size)
         return matrix
+    # unify
 
     @visitor.when(entities.MatrixInit)
     def visit(self, node):
@@ -294,6 +296,8 @@ class Interpreter(object):
         self.stack.pop()
         return result
 
+    # pop() into exception
+
     @visitor.when(entities.RangeExpression)
     def visit(self, node):
         start = node.expression1.accept(self)
@@ -318,3 +322,4 @@ class Interpreter(object):
                 break
 
         self.stack.pop()
+        # pop() into exception
