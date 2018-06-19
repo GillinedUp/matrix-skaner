@@ -52,8 +52,6 @@ def calculateMatrices(x):
 
 def calculateNumericMatrix(x):
     return {
-        # '*': lambda left, right: left * right,
-        # '/': lambda left, right: left / right,
         '==': lambda left, right: left == right,
         '!=': lambda left, right: left != right,
         '.*': lambda left, right: left * right,
@@ -63,11 +61,30 @@ def calculateNumericMatrix(x):
     }[x]
 
 
+def get_new_value(operator):
+    return {
+        '=': lambda old_value, value: value,
+        '+=': lambda old_value, value: old_value + value,
+        "-=": lambda old_value, value: old_value - value,
+        "*=": lambda old_value, value: old_value * value,
+        "/=": lambda old_value, value: old_value / value,
+
+    }[operator]
+
+
 class Interpreter(object):
     def __init__(self):
         self.stack = MemoryStack()
         self.stack.__init__(Memory('root'))
         self.level = 0
+
+    def createMatrix(self, matrix_type, node):
+        rows = node.rows.accept(self)
+        columns = node.columns.accept(self)
+        return {
+            'zeros': np.zeros((rows, columns)),
+            'ones': np.ones((rows, columns))
+        }[matrix_type]
 
     @visitor.on('node')
     def visit(self, node):
@@ -89,9 +106,10 @@ class Interpreter(object):
 
     @visitor.when(entities.Assign)
     def visit(self, node):
+        value = node.expression.accept(self)
+
         if isinstance(node.variable, entities.ArrayRef):
             matrix = self.stack.get(node.variable.matrix_name)
-            value = node.expression.accept(self)
             indexes = node.variable.index.accept(self)
             if isinstance(indexes, Indexes):
                 dim = indexes.dim
@@ -104,16 +122,22 @@ class Interpreter(object):
                     index += elements * ind
                     i += 1
 
-                np.put(matrix, [index], value)
-                print("Updated " + str(node.variable.matrix_name) + str(indexes.indexes) + " with value " + str(value))
+                old_value = np.take(matrix, [index])[0]
+                new_value = get_new_value(node.assign_op)(old_value, value)
+                np.put(matrix, [index], new_value)
+                print("Updated " + str(node.variable.matrix_name) + str(indexes.indexes) + " with value " + str(new_value))
             else:
+                old_value = matrix[0, indexes]
+                new_value = get_new_value(node.assign_op)(old_value, value)
+                matrix[0, indexes] = new_value
                 print("Updated " + str(node.variable.matrix_name) + "[" + str(indexes) + "]" + " with value " + str(
-                    value))
-                matrix[0, indexes] = value
+                    new_value))
         elif self.stack.get(str(node.variable.value)) is None:
-            self.stack.insert(str(node.variable.value), node.expression.accept(self))
+            self.stack.insert(str(node.variable.value), value)
         else:
-            self.stack.set(str(node.variable.value), node.expression.accept(self))
+            old_value = self.stack.get(str(node.variable.name))
+            new_value = get_new_value(node.assign_op)(old_value, value)
+            self.stack.set(str(node.variable.value), new_value)
 
     @visitor.when(entities.Int)
     def visit(self, node):
@@ -180,38 +204,29 @@ class Interpreter(object):
             if expression is None:
                 expression = node.expression.accept(self)
             return np.transpose(expression)
-        else:
+        elif node.operator == '-':
             expression = self.stack.get(node.expression)
             if expression is None:
                 expression = node.expression.accept(self)
-                return (-1) * expression
             return (-1) * expression
-    # Klaudia knows what has to be done :)
 
     @visitor.when(entities.ZerosMatrixInit)
     def visit(self, node):
-        rows = node.rows.accept(self)
-        columns = node.columns.accept(self)
-        matrix = np.zeros((rows, columns))
-        return matrix
+        return self.createMatrix('zeros', node)
 
     @visitor.when(entities.OnesMatrixInit)
     def visit(self, node):
-        rows = node.rows.accept(self)
-        columns = node.columns.accept(self)
-        matrix = np.ones((rows, columns))
-        return matrix
+        return self.createMatrix('ones', node)
 
     @visitor.when(entities.EyeMatrixInit)
     def visit(self, node):
         size = node.rows.accept(self)
         matrix = np.eye(size)
         return matrix
-    # unify
 
     @visitor.when(entities.MatrixInit)
     def visit(self, node):
-        matrixArray = []
+        matrix_array = []
         rows = node.rows
 
         while True:
@@ -232,13 +247,13 @@ class Interpreter(object):
                 res = rows.accept(self)
                 cur_row = cur_row[::-1]
                 cur_row.append(res)
-                matrixArray.append(cur_row)
+                matrix_array.append(cur_row)
                 break
 
             if len(cur_row) > 0:
-                matrixArray.append(cur_row[::-1])
+                matrix_array.append(cur_row[::-1])
 
-        return np.array(matrixArray)
+        return np.array(matrix_array)
 
     @visitor.when(entities.LoopControlInstruction)
     def visit(self, node):
