@@ -125,19 +125,23 @@ class Interpreter(object):
                 old_value = np.take(matrix, [index])[0]
                 new_value = get_new_value(node.assign_op)(old_value, value)
                 np.put(matrix, [index], new_value)
-                print("Updated " + str(node.variable.matrix_name) + str(indexes.indexes) + " with value " + str(new_value))
+                # print("Updated " + str(node.variable.matrix_name) + str(indexes.indexes) + " with value " + str(new_value))
             else:
                 old_value = matrix[0, indexes]
                 new_value = get_new_value(node.assign_op)(old_value, value)
                 matrix[0, indexes] = new_value
-                print("Updated " + str(node.variable.matrix_name) + "[" + str(indexes) + "]" + " with value " + str(
-                    new_value))
+                # print("Updated " + str(node.variable.matrix_name) + "[" + str(indexes) + "]" + " with value " + str(
+                #     new_value))
         elif self.stack.get(str(node.variable.value)) is None:
+            # print("Added variable " + str(node.variable.value) + " with value " + str(
+            #     value))
             self.stack.insert(str(node.variable.value), value)
         else:
-            old_value = self.stack.get(str(node.variable.name))
+            old_value = self.stack.get(str(node.variable.value))
             new_value = get_new_value(node.assign_op)(old_value, value)
             self.stack.set(str(node.variable.value), new_value)
+            # print("Updated " + str(node.variable.value) + " with value " + str(
+            #     new_value))
 
     @visitor.when(entities.Int)
     def visit(self, node):

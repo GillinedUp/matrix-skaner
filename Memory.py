@@ -35,7 +35,7 @@ class MemoryStack:
 
     def insert(self, name, value):  # inserts into memory stack variable <name> with value <value>
         self.stack[-1].put(name, value)
-        print("Inserted " + str(name) + " with value: " + str(value))
+        # print("Inserted " + str(name) + " with value: " + str(value))
 
     def set(self, name, value):  # sets variable <name> to value <value>
         for memory in reversed(self.stack):
