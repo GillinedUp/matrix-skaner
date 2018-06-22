@@ -311,11 +311,17 @@ class Interpreter(object):
                 continue
             except BreakException:
                 break
+            except:
+                break
 
         self.stack.pop()
         return result
 
-    # pop() into exception
+        # w bloku try ... except łapiemy wszystkie możliwe wyjątki, więc wykonanie
+        # programu zawsze dojdzie do tego miejsca, i seft.stack.pop() zawsze się wykona.
+        # Jeśli dodamy blok finally do pętli, to self.stack.pop() będzie wykonywał się tyle
+        # razy ile pętla, co jest błędne. Jeśli dodamy pętle wewnątrz bloku try ... except,
+        # to interpreter Pythona zgłosi błąd, że instrukcje continue i break są poza pętlą.
 
     @visitor.when(entities.RangeExpression)
     def visit(self, node):
@@ -328,17 +334,26 @@ class Interpreter(object):
     def visit(self, node):
         self.stack.push(Memory("for"))
         my_id, range_expression = node.range_expression.accept(self)
+        result = None
         for val in range_expression:
             try:
                 if self.stack.get(str(my_id)) is None:
                     self.stack.insert(str(my_id), val)
                 else:
                     self.stack.set(str(my_id), val)
-                node.braced_expression.accept(self)
+                result = node.braced_expression.accept(self)
             except ContinueException:
                 continue
             except BreakException:
                 break
+            except:
+                break
 
         self.stack.pop()
-        # pop() into exception
+        return result
+
+        # w bloku try ... except łapiemy wszystkie możliwe wyjątki, więc wykonanie
+        # programu zawsze dojdzie do tego miejsca, i seft.stack.pop() zawsze się wykona.
+        # Jeśli dodamy blok finally do pętli, to self.stack.pop() będzie wykonywał się tyle
+        # razy ile pętla, co jest błędne. Jeśli dodamy pętle wewnątrz bloku try ... except,
+        # to interpreter Pythona zgłosi błąd, że instrukcje continue i break są poza pętlą.
